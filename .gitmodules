@@ -1,0 +1,3 @@
+[submodule "repos/ballerina-lang"]
+	path = repos/ballerina-lang
+	url = https://github.com/ballerina-platform/ballerina-lang.git
