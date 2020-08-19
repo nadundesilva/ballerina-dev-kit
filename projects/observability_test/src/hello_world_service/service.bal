@@ -15,7 +15,7 @@ service hello on new http:Listener(9090) {
 
         string[] fruits = ["apple", "banana", "cherry"];
         foreach var v in fruits {
-            log:printInfo("fruit: ", v);
+            log:printInfo("fruit: " + v);
         }
 
         // Send a response back to the caller.
