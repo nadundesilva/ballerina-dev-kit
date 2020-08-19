@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Main Params
 DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT=2
 DEV_BALLERINA_PROJECT_NAME="$1"

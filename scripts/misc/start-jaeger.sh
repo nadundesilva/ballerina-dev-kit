@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 JAEGER_IMAGE="jaegertracing/all-in-one:1.18"
 JAEGER_CONTAINER_NAME="ballerina-dev-kit-jaeger"
 JAEGER_PORTAL_PORT=16686

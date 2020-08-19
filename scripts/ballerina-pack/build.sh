@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh

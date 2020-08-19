@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ "${DEV_BALLERINA_PROPERTIES_INITIALIZED}" == "true" ]; then
   return 0
 fi

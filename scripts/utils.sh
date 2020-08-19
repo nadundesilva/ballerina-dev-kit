@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 function runBallerinaLangGradleBuild() {
   DEV_BALLERINA_GRADLE_COMMON_ARGS=(
     "-x" "updateVersion"
