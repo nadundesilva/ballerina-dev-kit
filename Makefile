@@ -1,4 +1,17 @@
-REMOTE_DEBUG_PORT=5005
+REMOTE_DEBUG_PORT := 5005
+
+BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_NAMES := hello_world_service simple_passthrough
+BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_TARGETS := $(addprefix ballerina-project.observability_test., $(BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_NAMES))
+
+BALLERINA_PROJECT_MODULE_TARGETS := $(BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_TARGETS)
+BALLERINA_PROJECT_BUILD_TARGETS := $(addsuffix .build, $(BALLERINA_PROJECT_MODULE_TARGETS))
+BALLERINA_PROJECT_BUILD_DEBUG_TARGETS := $(addsuffix .build.debug, $(BALLERINA_PROJECT_MODULE_TARGETS))
+BALLERINA_PROJECT_RUN_TARGETS := $(addsuffix .run, $(BALLERINA_PROJECT_MODULE_TARGETS))
+BALLERINA_PROJECT_RUN_DEBUG_TARGETS := $(addsuffix .run.debug, $(BALLERINA_PROJECT_MODULE_TARGETS))
+
+#
+# Ballerina Pack related targets starts here
+#
 
 .PHONY: ballerina-pack.build
 ballerina-pack.build:
@@ -15,26 +28,50 @@ ballerina-pack.build.in-place-update:
 	cd scripts/ballerina-pack; \
 	bash quickUpdate.sh
 
-.PHONY: ballerina-project.observability_test.hello_world_service.build
-ballerina-project.observability_test.hello_world_service.build:
-	cd scripts/ballerina-project; \
-	bash build.sh observability_test hello_world_service
+#
+# Ballerina Projects related targets starts here
+#
 
-.PHONY: ballerina-project.observability_test.hello_world_service.build.debug
-ballerina-project.observability_test.hello_world_service.build.debug:
+# Targets: ballerina-project.<project-name>.<module-name>.build
+.PHONY: $(BALLERINA_PROJECT_BUILD_TARGETS)
+$(BALLERINA_PROJECT_BUILD_TARGETS):
+	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.build,%,$@)))
+	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
+	cd scripts/ballerina-project; \
+	bash build.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE)
+
+# Targets: ballerina-project.<project-name>.<module-name>.build.debug
+.PHONY: $(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS)
+$(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS):
+	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.build.debug,%,$@)))
+	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
 	cd scripts/ballerina-project; \
 	export BAL_JAVA_DEBUG=${REMOTE_DEBUG_PORT}; \
-	bash build.sh observability_test hello_world_service --skip-tests
+	bash build.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE) --skip-tests
 
-.PHONY: ballerina-project.observability_test.hello_world_service.run
-ballerina-project.observability_test.hello_world_service.run:
+# Targets: ballerina-project.<project-name>.<module-name>.run
+.PHONY: $(BALLERINA_PROJECT_RUN_TARGETS)
+$(BALLERINA_PROJECT_RUN_TARGETS):
+	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.run,%,$@)))
+	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
 	cd scripts/ballerina-project; \
-	bash run.sh observability_test hello_world_service
+	bash run.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE)
 
-.PHONY: ballerina-project.observability_test.hello_world_service.run.debug
-ballerina-project.observability_test.hello_world_service.run.debug:
+# Targets: ballerina-project.<project-name>.<module-name>.run.debug
+.PHONY: $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS)
+$(BALLERINA_PROJECT_RUN_DEBUG_TARGETS):
+	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.run.debug,%,$@)))
+	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
 	cd scripts/ballerina-project; \
-	bash run.sh observability_test hello_world_service -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
+	bash run.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE) -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
+
+#
+# Miscelaneous targets starts here
+#
 
 .PHONY: misc.jaeger.start
 misc.jaeger.start:

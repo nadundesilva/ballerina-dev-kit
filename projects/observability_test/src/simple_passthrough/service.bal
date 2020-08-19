@@ -20,9 +20,7 @@ service hello on new http:Listener(9091) {
         var response = clientEndpoint->get("/get?test=123");
         handleResponse(response);
 
-        log:printInfo("Sending POST Request to Postman Echo");
-        response = clientEndpoint->post("/post", "POST: Hello World");
-        handleResponse(response);
+        sendPostRequest();
 
         // Send a response back to the caller.
         error? result = caller->respond("Hello from Ballerina Dev Kit!");
@@ -30,6 +28,13 @@ service hello on new http:Listener(9091) {
             io:println("Error in responding: ", result);
         }
     }
+}
+
+@observe:Observable
+function sendPostRequest() {
+    log:printInfo("Sending POST Request to Postman Echo");
+    var response = clientEndpoint->post("/post", "POST: Hello World");
+    handleResponse(response);
 }
 
 @observe:Observable
