@@ -6,8 +6,8 @@ import ballerina/observe;
 http:Client clientEndpoint = new ("http://postman-echo.com");
 
 # A service representing a network-accessible API
-# bound to port `9090`.
-service hello on new http:Listener(9091) {
+# bound to port `10011`.
+service hello on new http:Listener(10011) {
 
     # A resource representing an invokable API method
     # accessible at `/hello/sayHello`.
@@ -52,5 +52,5 @@ function handleResponse(http:Response|error response) {
 }
 
 public function main() {
-    io:println("Send Get Request to http://localhost:9091/hello/sayHello to call the API");
+    io:println("Send Get Request to http://localhost:10011/hello/sayHello to call the API");
 }

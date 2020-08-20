@@ -77,3 +77,8 @@ $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS):
 misc.jaeger.start:
 	cd scripts/misc; \
 	bash start-jaeger.sh
+
+.PHONY: misc.prometheus.start
+misc.prometheus.start:
+	cd scripts/misc; \
+	bash start-prometheus.sh

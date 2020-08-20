@@ -1,10 +1,9 @@
 import ballerina/http;
 import ballerina/io;
-import ballerina/log;
 
 # A service representing a network-accessible API
-# bound to port `9090`.
-service hello on new http:Listener(9090) {
+# bound to port `10010`.
+service hello on new http:Listener(10010) {
 
     # A resource representing an invokable API method
     # accessible at `/hello/sayHello`.
@@ -22,5 +21,5 @@ service hello on new http:Listener(9090) {
 }
 
 public function main() {
-    io:println("Send Get Request to http://localhost:9090/hello/sayHello to call the API");
+    io:println("Send Get Request to http://localhost:10010/hello/sayHello to call the API");
 }
