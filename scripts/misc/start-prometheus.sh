@@ -27,7 +27,7 @@ echo
 echo "Starting Prometheus container"
 
 docker run -it --name ${PROMETHEUS_CONTAINER_NAME} \
-  -p ${PROMETHEUS_PORTAL_PORT}:9090 \
+  -p "${PROMETHEUS_PORTAL_PORT}:9090" \
   -v "${PROMETHEUS_CONFIG_FILE}:/etc/prometheus/prometheus.yml" \
   --net host \
   ${PROMETHEUS_IMAGE}

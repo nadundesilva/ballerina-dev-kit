@@ -7,14 +7,14 @@ http:Client clientEndpoint = new ("http://postman-echo.com");
 
 # A service representing a network-accessible API
 # bound to port `10011`.
-service hello on new http:Listener(10011) {
+service simplePassThrough on new http:Listener(10011) {
 
     # A resource representing an invokable API method
-    # accessible at `/hello/sayHello`.
+    # accessible at `/simplePassThrough/passThroughToPostman`.
     #
     # + caller - the client invoking this resource
     # + request - the inbound request
-    resource function sayHello(http:Caller caller, http:Request request) {
+    resource function passThroughToPostman(http:Caller caller, http:Request request) {
 
         log:printInfo("Sending GET Request to Postman Echo");
         var response = clientEndpoint->get("/get?test=123");
@@ -52,5 +52,5 @@ function handleResponse(http:Response|error response) {
 }
 
 public function main() {
-    io:println("Send Get Request to http://localhost:10011/hello/sayHello to call the API");
+    io:println("Send Get Request to http://localhost:10011/simplePassThrough/passThroughToPostman to call the API");
 }
