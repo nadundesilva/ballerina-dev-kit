@@ -82,3 +82,8 @@ misc.jaeger.start:
 misc.prometheus.start:
 	cd scripts/misc; \
 	bash start-prometheus.sh
+
+.PHONY: misc.grafana.start
+misc.grafana.start:
+	cd scripts/misc; \
+	bash start-grafana.sh
