@@ -1,6 +1,3 @@
 [submodule "repos/ballerina-lang"]
 	path = repos/ballerina-lang
 	url = https://github.com/ballerina-platform/ballerina-lang.git
-[submodule "docker/artifacts/repos/wso2/performance-common"]
-	path = docker/artifacts/repos/wso2/performance-common
-	url = https://github.com/wso2/performance-common.git
