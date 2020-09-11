@@ -14,12 +14,13 @@ if [ ! -d "${DEV_BALLERINA_PACK}" ]; then
   exit 1
 fi
 
-echo "🔨🔨Updating Ballerina Pack directly"
+echo "Running Gradle Update Bal Home (Ballerina Lang)"
 export BAL_HOME="${DEV_BALLERINA_PACK}"
-runBallerinaLangGradleBuild :jballerina-tools:updateBalHome \
-  -x :build-config:checkstyle:downloadFile \
-  -x check \
-  -x test
+pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
+echo
+./gradlew :jballerina-tools:updateBalHome -x test -x check
+echo
+popd || exit 1
 
 echo "Updating Ballerina Pack Complete"
 printBallerinaPackInfo
