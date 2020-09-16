@@ -21,7 +21,7 @@ ballerina-pack.build:
 .PHONY: ballerina-pack.build.no-cache
 ballerina-pack.build.no-cache:
 	cd scripts/ballerina-pack; \
-	bash build.sh --no-build-cache
+	USE_BUILD_CACHE="false" bash build.sh
 
 .PHONY: ballerina-pack.build.in-place-update
 ballerina-pack.build.in-place-update:

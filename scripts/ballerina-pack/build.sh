@@ -2,6 +2,8 @@
 
 set -e
 
+USE_BUILD_CACHE=${USE_BUILD_CACHE:-"true"}
+
 DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh
@@ -9,10 +11,18 @@ source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../properties.sh"
 # shellcheck source=../utils.sh
 source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
 
-echo "Running Gradle Build (Ballerina Lang)"
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
-./gradlew clean build --no-build-cache -x test -x check -x :jballerina-tools:generateDocs publishToMavenLocal
+echo "Running Gradle Build (Ballerina Lang)"
+if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
+  ./gradlew clean build --no-build-cache -x test -x check -x :jballerina-tools:generateDocs
+  echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
+  ./gradlew --no-build-cache publishToMavenLocal
+else
+  ./gradlew clean build -x test -x check -x :jballerina-tools:generateDocs
+  echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
+  ./gradlew publishToMavenLocal
+fi
 echo
 popd || exit 1
 
@@ -21,7 +31,11 @@ pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
 export packageUser="${BALLERINA_GITHUB_USERNAME}"
 export packagePAT="${BALLERINA_GITHUB_PAT}"
-./gradlew clean build -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
+  ./gradlew clean build --no-build-cache -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+else
+  ./gradlew clean build -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+fi
 echo
 popd || exit 1
 
