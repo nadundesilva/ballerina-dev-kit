@@ -15,13 +15,15 @@ pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --no-build-cache -x test -x check -x :jballerina-tools:generateDocs
-  echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
-  ./gradlew --no-build-cache publishToMavenLocal
+  ./gradlew clean build --stacktrace --no-build-cache -x test -x check -x :jballerina-tools:generateDocs -x kaitai
 else
-  ./gradlew clean build -x test -x check -x :jballerina-tools:generateDocs
-  echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
-  ./gradlew publishToMavenLocal
+  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs -x kaitai
+fi
+echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
+if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
+  ./gradlew --no-build-cache publishToMavenLocal -x kaitai
+else
+  ./gradlew publishToMavenLocal -x kaitai
 fi
 echo
 popd || exit 1
@@ -29,12 +31,10 @@ popd || exit 1
 echo "Running Gradle Build (Ballerina Distribution)"
 pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
-export packageUser="${BALLERINA_GITHUB_USERNAME}"
-export packagePAT="${BALLERINA_GITHUB_PAT}"
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --no-build-cache -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+  ./gradlew clean build --stacktrace --no-build-cache -x testExample -x testStdlibs -x :ballerina-distribution-test:test
 else
-  ./gradlew clean build -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+  ./gradlew clean build --stacktrace -x testExample -x testStdlibs -x :ballerina-distribution-test:test
 fi
 echo
 popd || exit 1
