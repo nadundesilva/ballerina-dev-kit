@@ -1,6 +1,6 @@
 [package]
 org = "nadun"
-name = "hello"
+name = "hello_world_service"
 version = "0.1.0"
 
 [build-options]
