@@ -28,6 +28,12 @@ jobs:
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           make ballerina-pack.build.with-cache
+      - name: Upload Pack
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ballerina Pack (${{ matrix.os }})
+          if-no-files-found: error
+          path: packs/ballerina-*.zip
   ballerina_pack_build:
     name: Build Ballerina Pack
     strategy:
@@ -49,15 +55,9 @@ jobs:
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
         make ballerina-pack.build
-    - name: Upload Pack
-      uses: actions/upload-artifact@v2
-      with:
-        name: Ballerina Pack (${{ matrix.os }})
-        if-no-files-found: error
-        path: packs/ballerina-*.zip
   test_pack_build_in_place_update:
     name: Test Ballerina Pack in-place Update
-    needs: ballerina_pack_build
+    needs: ballerina_pack_build_with_build_cache
     strategy:
       matrix:
         os: ["ubuntu-20.04"]
@@ -86,7 +86,7 @@ jobs:
           make ballerina-pack.build.in-place-update
   test_projects:
     name: Test Build Projects
-    needs: ballerina_pack_build
+    needs: ballerina_pack_build_with_build_cache
     strategy:
       matrix:
         os: ["ubuntu-20.04"]
