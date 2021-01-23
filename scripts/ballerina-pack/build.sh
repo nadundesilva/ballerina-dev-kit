@@ -68,5 +68,5 @@ if [ -f "${AZURE_FUNCTIONS_PLUGIN_JAR}" ]; then
   rm "${AZURE_FUNCTIONS_PLUGIN_JAR}"
 fi
 
-echo "Updating Ballerina Pack Complete"
+echo "Building Ballerina Pack Complete"
 printBallerinaPackInfo
