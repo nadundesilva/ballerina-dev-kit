@@ -5,10 +5,14 @@ on:
   push:
     branches:
     - master
+
 jobs:
   ballerina_pack_build_with_build_cache:
     name: Build Ballerina Pack with Cache
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Cloning repository
         uses: actions/checkout@v2
@@ -26,7 +30,10 @@ jobs:
           make ballerina-pack.build.with-cache
   ballerina_pack_build:
     name: Build Ballerina Pack
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04"]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
       uses: actions/checkout@v2
@@ -45,13 +52,16 @@ jobs:
     - name: Upload Pack
       uses: actions/upload-artifact@v2
       with:
-        name: Ballerina Pack
+        name: Ballerina Pack (${{ matrix.os }})
         if-no-files-found: error
         path: packs/ballerina-*.zip
   test_pack_build_in_place_update:
     name: Test Ballerina Pack in-place Update
     needs: ballerina_pack_build
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Cloning repository
         uses: actions/checkout@v2
@@ -64,7 +74,7 @@ jobs:
       - name: Download Pack
         uses: actions/download-artifact@v2
         with:
-          name: Ballerina Pack
+          name: Ballerina Pack (${{ matrix.os }})
           path: packs
       - name: Unzip Pack
         run: bash scripts/ballerina-pack/unzipPack.sh
@@ -79,8 +89,9 @@ jobs:
     needs: ballerina_pack_build
     strategy:
       matrix:
+        os: ["ubuntu-20.04"]
         project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Cloning repository
         uses: actions/checkout@v2
@@ -93,7 +104,7 @@ jobs:
       - name: Download Pack
         uses: actions/download-artifact@v2
         with:
-          name: Ballerina Pack
+          name: Ballerina Pack (${{ matrix.os }})
           path: packs
       - name: Unzip Pack
         run: bash scripts/ballerina-pack/unzipPack.sh
@@ -101,4 +112,4 @@ jobs:
         env:
           TEST_PROJECT_NAME: ${{ matrix.project }}
         run: |
-          make ballerina-project.${TEST_PROJECT_NAME}.run
+          make ballerina-project.${TEST_PROJECT_NAME}.build
