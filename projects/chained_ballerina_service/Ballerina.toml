@@ -1,0 +1,9 @@
+[package]
+org="ballerina_dev_kit"
+name="chained_ballerina_service"
+version="0.1.0"
+
+[build-options]
+observabilityIncluded=true
+
+[dependencies]
