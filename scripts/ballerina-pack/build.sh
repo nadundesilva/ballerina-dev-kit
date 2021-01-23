@@ -4,12 +4,12 @@ set -e
 
 USE_BUILD_CACHE=${USE_BUILD_CACHE:-"false"}
 
-DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../properties.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
@@ -53,7 +53,7 @@ echo "Copying new Ballerina Pack zip to ${DEV_BALLERINA_PACK_ZIP}"
 cp  "${DEV_BALLERINA_DISTRIBUTION_REPO}/ballerina/build/distributions/${DEV_BALLERINA_PACK_NAME}.zip" "${DEV_BALLERINA_PACK_ZIP}"
 
 # shellcheck source=./unzipPack.sh
-bash "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/unzipPack.sh"
+bash "${DEV_BALLERINA_SCRIPTS_DIR}/ballerina-pack/unzipPack.sh"
 
 echo "Building Ballerina Pack Complete"
 printBallerinaPackInfo

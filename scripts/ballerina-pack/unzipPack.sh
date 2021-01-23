@@ -2,12 +2,12 @@
 
 set -e
 
-DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../properties.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 if [ -d "${DEV_BALLERINA_PACK}" ]; then
   echo "Removing previous Ballerina Pack ${DEV_BALLERINA_PACK}"

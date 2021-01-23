@@ -6,12 +6,12 @@ set -e
 DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT=1
 DEV_BALLERINA_PROJECT_NAME="$1"
 
-DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../properties.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
-source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
+source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 DEV_BALLERINA_PROJECT_PATH="${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}"
 

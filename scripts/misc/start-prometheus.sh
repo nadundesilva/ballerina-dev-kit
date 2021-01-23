@@ -2,11 +2,11 @@
 
 set -e
 
-DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 PROMETHEUS_IMAGE="prom/prometheus:v2.20.1"
 PROMETHEUS_CONTAINER_NAME="ballerina-dev-kit-prometheus"
-PROMETHEUS_CONFIG_FILE="${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/resources/prometheus/config.yml"
+PROMETHEUS_CONFIG_FILE="${DEV_BALLERINA_SCRIPTS_DIR}/misc/resources/prometheus/config.yml"
 PROMETHEUS_PORTAL_PORT=9090
 
 PROMETHEUS_OLD_CONTAINER_ID=$(docker ps -f name=${PROMETHEUS_CONTAINER_NAME} -a -q)
