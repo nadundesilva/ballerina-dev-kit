@@ -74,9 +74,12 @@ jobs:
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           make ballerina-pack.build.in-place-update
-  test_project_hello_world_service:
-    name: Test Hello World Service Project
+  test_projects:
+    name: Test Build Projects
     needs: ballerina_pack_build
+    strategy:
+      matrix:
+        project: ["hello_world_service", "simple_passthrough"]
     runs-on: ubuntu-20.04
     steps:
       - name: Cloning repository
@@ -95,5 +98,7 @@ jobs:
       - name: Unzip Pack
         run: bash scripts/ballerina-pack/unzipPack.sh
       - name: Test Project
+        env:
+          TEST_PROJECT_NAME: ${{ matrix.project }}
         run: |
-          make ballerina-project.hello_world_service.run
+          make ballerina-project.${TEST_PROJECT_NAME}.run
