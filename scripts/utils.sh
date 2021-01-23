@@ -13,15 +13,18 @@ function printBallerinaPackInfo() {
   echo "============================"
   echo " Ballerina Pack Information "
   echo "============================"
+
   "${DEV_BALLERINA_EXECUTABLE}" version
   echo "Ballerina Home: $("${DEV_BALLERINA_EXECUTABLE}" home)"
   echo
 }
 
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
-  function readAbsolutePath() {
-    readlink -f "$1"
-  }
+  # shellcheck source=./utils-linux.sh
+  source "${DEV_BALLERINA_SCRIPTS_DIR}/utils-linux.sh"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # shellcheck source=./utils-linux.sh
+  source "${DEV_BALLERINA_SCRIPTS_DIR}/utils-macos.sh"
 else
   echo "Unsupported OS: ${OSTYPE}"
   exit 1

@@ -12,7 +12,7 @@ jobs:
     name: Build Ballerina Pack with Cache
     strategy:
       matrix:
-        os: ["ubuntu-20.04"]
+        os: ["ubuntu-20.04", "macos-10.15"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Cloning repository
@@ -39,7 +39,7 @@ jobs:
     name: Build Ballerina Pack
     strategy:
       matrix:
-        os: ["ubuntu-20.04"]
+        os: ["ubuntu-20.04", "macos-10.15"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
@@ -61,7 +61,7 @@ jobs:
     needs: ballerina_pack_build_with_build_cache
     strategy:
       matrix:
-        os: ["ubuntu-20.04"]
+        os: ["ubuntu-20.04", "macos-10.15"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Cloning repository
@@ -90,7 +90,7 @@ jobs:
     needs: ballerina_pack_build_with_build_cache
     strategy:
       matrix:
-        os: ["ubuntu-20.04"]
+        os: ["ubuntu-20.04", "macos-10.15"]
         project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
     runs-on: ${{ matrix.os }}
     steps:
