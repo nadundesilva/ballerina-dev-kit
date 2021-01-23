@@ -47,9 +47,9 @@ jobs:
       with:
         name: Ballerina Pack
         if-no-files-found: error
-        path: packs/ballerina-*
-  ballerina_pack_build_in_place_update:
-    name: Build Ballerina Pack in-place Update
+        path: packs/ballerina-*.zip
+  test_pack_build_in_place_update:
+    name: Test Ballerina Pack in-place Update
     needs: ballerina_pack_build
     runs-on: ubuntu-20.04
     steps:
@@ -66,6 +66,8 @@ jobs:
         with:
           name: Ballerina Pack
           path: packs
+      - name: Unzip Pack
+        run: bash scripts/ballerina-pack/unzipPack.sh
       - name: In-place Update
         env:
           packageUser: ${{ github.actor }}
