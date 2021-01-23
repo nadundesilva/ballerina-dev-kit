@@ -18,5 +18,14 @@ function printBallerinaPackInfo() {
   echo
 }
 
+if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+  function readAbsolutePath() {
+    readlink -f "$1"
+  }
+else
+  echo "Unsupported OS: ${OSTYPE}"
+  exit 1
+fi
+
 DEV_BALLERINA_UTILS_INITIALIZED=true
 export DEV_BALLERINA_UTILS_INITIALIZED

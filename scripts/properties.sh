@@ -8,12 +8,15 @@ fi
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# shellcheck source=./utils.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+
 echo
 echo "================================="
 echo " Ballerina Dev Kit Configuration "
 echo "================================="
 
-DEV_BALLERINA_ROOT_DIR="$(readlink -f "${DEV_BALLERINA_SCRIPTS_DIR}/..")"
+DEV_BALLERINA_ROOT_DIR="$(readAbsolutePath "${DEV_BALLERINA_SCRIPTS_DIR}/..")"
 export DEV_BALLERINA_ROOT_DIR
 echo "Ballerina Dev Kit Root Directory: ${DEV_BALLERINA_ROOT_DIR}"
 

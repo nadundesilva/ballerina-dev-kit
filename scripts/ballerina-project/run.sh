@@ -15,14 +15,14 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 pushd "${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}" || exit 1
 
-DEV_BALLERINA_PROJECT_BUILD_JAR=$(readlink -f ".")/target/bin/${DEV_BALLERINA_PROJECT_NAME}.jar
+DEV_BALLERINA_PROJECT_BUILD_JAR=$(readAbsolutePath ".")/target/bin/${DEV_BALLERINA_PROJECT_NAME}.jar
 
 if [ ! -f "${DEV_BALLERINA_PROJECT_BUILD_JAR}" ]; then
   echo "Ballerina build Jar: ${DEV_BALLERINA_PROJECT_BUILD_JAR} not found"
   bash "${DEV_BALLERINA_ROOT_DIR}/scripts/ballerina-project/build.sh" "${DEV_BALLERINA_PROJECT_NAME}"
 fi
 
-DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE=$(readlink -f "./ballerina-internal.log")
+DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE=$(readAbsolutePath "./ballerina-internal.log")
 if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
   echo "Removing Internal Log File ${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
   rm -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
