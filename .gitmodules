@@ -4,3 +4,12 @@
 [submodule "repos/ballerina-distribution"]
 	path = repos/ballerina-distribution
 	url = https://github.com/ballerina-platform/ballerina-distribution.git
+[submodule "repos/module-ballerinax-choreo"]
+	path = repos/module-ballerinax-choreo
+	url = https://github.com/nadundesilva/module-ballerinax-choreo.git
+[submodule "repos/module-ballerinax-prometheus"]
+	path = repos/module-ballerinax-prometheus
+	url = https://github.com/nadundesilva/module-ballerinax-prometheus.git
+[submodule "repos/module-ballerinax-jaeger"]
+	path = repos/module-ballerinax-jaeger
+	url = https://github.com/nadundesilva/module-ballerinax-jaeger.git
