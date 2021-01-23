@@ -20,13 +20,13 @@ if [ ! -d "${DEV_BALLERINA_PACK}" ]; then
   bash "${DEV_BALLERINA_ROOT_DIR}/scripts/ballerina-pack/build.sh"
 fi
 
-DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE=$(realpath "./ballerina-internal.log")
+DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE=$(readlink -f "./ballerina-internal.log")
 if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
   echo "Removing Internal Log File ${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
   rm -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
 fi
 
-DEV_BALLERINA_PROJECT_TARGET_DIR=$(realpath "./target")
+DEV_BALLERINA_PROJECT_TARGET_DIR=$(readlink -f "./target")
 if [ -d "${DEV_BALLERINA_PROJECT_TARGET_DIR}" ]; then
   echo "Removing Build Directory ${DEV_BALLERINA_PROJECT_TARGET_DIR}"
   rm -rf "${DEV_BALLERINA_PROJECT_TARGET_DIR}"

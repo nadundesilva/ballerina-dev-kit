@@ -13,7 +13,7 @@ echo "================================="
 echo " Ballerina Dev Kit Configuration "
 echo "================================="
 
-DEV_BALLERINA_ROOT_DIR="$(realpath "${DEV_BALLERINA_SCRIPTS_DIR}/..")"
+DEV_BALLERINA_ROOT_DIR="$(readlink -f "${DEV_BALLERINA_SCRIPTS_DIR}/..")"
 export DEV_BALLERINA_ROOT_DIR
 echo "Ballerina Dev Kit Root Directory: ${DEV_BALLERINA_ROOT_DIR}"
 
