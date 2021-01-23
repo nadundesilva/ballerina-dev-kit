@@ -1,8 +1,9 @@
-import ballerina/http;
 import ballerina/io;
+import ballerina/http;
 import ballerina/observe;
-
-http:Client clientEndpoint = new ("http://localhost:10011");
+import ballerinax/prometheus as _;
+import ballerinax/jaeger as _;
+import ballerinax/choreo as _;
 
 # A service representing a network-accessible API
 # bound to port `10012`.
@@ -14,6 +15,7 @@ service /chainedBallerinaService on new http:Listener(10012) {
     # + caller - the client invoking this resource
     # + request - the inbound request
     resource function get firstResourceCall(http:Caller caller, http:Request request) {
+        http:Client clientEndpoint = checkpanic new ("http://localhost:10011");
 
         var response = clientEndpoint->get("/simplePassThrough/passThroughToPostman");
         handleResponseFromBackend(response);
@@ -27,7 +29,7 @@ service /chainedBallerinaService on new http:Listener(10012) {
 }
 
 @observe:Observable
-function handleResponseFromBackend(http:Response|http:Payload|error response) {
+function handleResponseFromBackend(http:Response|http:PayloadType|http:ClientError response) {
     if (response is http:Response) {
         var msg = response.getTextPayload();
         if (msg is json) {

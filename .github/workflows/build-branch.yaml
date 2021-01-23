@@ -79,7 +79,7 @@ jobs:
     needs: ballerina_pack_build
     strategy:
       matrix:
-        project: ["hello_world_service", "simple_passthrough"]
+        project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
     runs-on: ubuntu-20.04
     steps:
       - name: Cloning repository
