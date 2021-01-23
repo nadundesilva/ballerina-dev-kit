@@ -23,7 +23,7 @@ jobs:
           packageUser: ${{ github.actor }}
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          make ballerina-pack.build
+          make ballerina-pack.build.with-cache
   ballerina_pack_build_in_place_update:
     name: "Build Ballerina Pack in-place Update"
     runs-on: "ubuntu-20.04"
@@ -65,4 +65,4 @@ jobs:
         packageUser: ${{ github.actor }}
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        make ballerina-pack.build.no-cache
+        make ballerina-pack.build

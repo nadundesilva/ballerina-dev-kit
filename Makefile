@@ -18,10 +18,10 @@ ballerina-pack.build:
 	cd scripts/ballerina-pack; \
 	bash build.sh
 
-.PHONY: ballerina-pack.build.no-cache
-ballerina-pack.build.no-cache:
+.PHONY: ballerina-pack.build.with-cache
+ballerina-pack.build.with-cache:
 	cd scripts/ballerina-pack; \
-	USE_BUILD_CACHE="false" bash build.sh
+	USE_BUILD_CACHE="true" bash build.sh
 
 .PHONY: ballerina-pack.build.in-place-update
 ballerina-pack.build.in-place-update:

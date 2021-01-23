@@ -2,7 +2,7 @@
 
 set -e
 
-USE_BUILD_CACHE=${USE_BUILD_CACHE:-"true"}
+USE_BUILD_CACHE=${USE_BUILD_CACHE:-"false"}
 
 DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -14,16 +14,16 @@ source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
-if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs --no-build-cache
-else
+if [[ "${USE_BUILD_CACHE}" == "true" ]]; then
   ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs
+else
+  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs --no-build-cache
 fi
 echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
-if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew publishToMavenLocal --stacktrace -x test -x check --no-build-cache
-else
+if [[ "${USE_BUILD_CACHE}" == "true" ]]; then
   ./gradlew publishToMavenLocal --stacktrace -x test -x check
+else
+  ./gradlew publishToMavenLocal --stacktrace -x test -x check --no-build-cache
 fi
 echo
 popd || exit 1
@@ -31,12 +31,12 @@ popd || exit 1
 echo "Running Gradle Build (Ballerina Distribution)"
 pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
-if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --stacktrace --no-build-cache \
+if [[ "${USE_BUILD_CACHE}" == "true" ]]; then
+  ./gradlew clean build --stacktrace \
     -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
     -x :devtools-integration-tests:test
 else
-  ./gradlew clean build --stacktrace \
+  ./gradlew clean build --stacktrace --no-build-cache \
     -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
     -x :devtools-integration-tests:test
 fi
