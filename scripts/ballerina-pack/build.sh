@@ -15,15 +15,15 @@ pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --stacktrace --no-build-cache -x test -x check -x :jballerina-tools:generateDocs -x kaitai
+  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs --no-build-cache
 else
-  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs -x kaitai
+  ./gradlew clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs
 fi
 echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew --no-build-cache publishToMavenLocal -x kaitai
+  ./gradlew publishToMavenLocal --stacktrace -x test -x check --no-build-cache
 else
-  ./gradlew publishToMavenLocal -x kaitai
+  ./gradlew publishToMavenLocal --stacktrace -x test -x check
 fi
 echo
 popd || exit 1
@@ -32,9 +32,13 @@ echo "Running Gradle Build (Ballerina Distribution)"
 pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  ./gradlew clean build --stacktrace --no-build-cache -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+  ./gradlew clean build --stacktrace --no-build-cache \
+    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
+    -x :devtools-integration-tests:test
 else
-  ./gradlew clean build --stacktrace -x testExample -x testStdlibs -x :ballerina-distribution-test:test
+  ./gradlew clean build --stacktrace \
+    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
+    -x :devtools-integration-tests:test
 fi
 echo
 popd || exit 1
@@ -57,6 +61,12 @@ BALLERINA_PACK_DIR=$(dirname "${DEV_BALLERINA_PACK}")
 echo "Unzipping new Ballerina Pack to ${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}"
 unzip "${DEV_BALLERINA_PACK_ZIP}" -d "${BALLERINA_PACK_DIR}" > /dev/null
 sudo chmod -R 777 "${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}/bin/ballerina"
+
+AZURE_FUNCTIONS_PLUGIN_JAR=${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}/distributions/ballerina-${DEV_BALLERINA_SHORT_VERSION}/bre/lib/azurefunctions-extension-${DEV_BALLERINA_PROJECT_VERSION}.jar
+if [ -f "${AZURE_FUNCTIONS_PLUGIN_JAR}" ]; then
+  echo "Removing Azure Functions Plugin ${AZURE_FUNCTIONS_PLUGIN_JAR}"
+  rm "${AZURE_FUNCTIONS_PLUGIN_JAR}"
+fi
 
 echo "Updating Ballerina Pack Complete"
 printBallerinaPackInfo
