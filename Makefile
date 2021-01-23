@@ -1,7 +1,7 @@
 REMOTE_DEBUG_PORT := 5005
 
 BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_NAMES := hello_world_service simple_passthrough chained_ballerina_service
-BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_TARGETS := $(addprefix ballerina-project.observability_test., $(BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_NAMES))
+BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_TARGETS := $(addprefix ballerina-project., $(BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_NAMES))
 
 BALLERINA_PROJECT_MODULE_TARGETS := $(BALLERINA_PROJECT_OBSERVABILITY_TEST_MODULE_TARGETS)
 BALLERINA_PROJECT_BUILD_TARGETS := $(addsuffix .build, $(BALLERINA_PROJECT_MODULE_TARGETS))
@@ -35,39 +35,31 @@ ballerina-pack.build.in-place-update:
 # Targets: ballerina-project.<project-name>.<module-name>.build
 .PHONY: $(BALLERINA_PROJECT_BUILD_TARGETS)
 $(BALLERINA_PROJECT_BUILD_TARGETS):
-	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.build,%,$@)))
-	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
-	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.build,%,$@)))
 	cd scripts/ballerina-project; \
-	bash build.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE)
+	bash build.sh $(BALLERINA_PROJECT)
 
 # Targets: ballerina-project.<project-name>.<module-name>.build.debug
 .PHONY: $(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS)
 $(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS):
-	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.build.debug,%,$@)))
-	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
-	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.build.debug,%,$@)))
 	cd scripts/ballerina-project; \
 	export BAL_JAVA_DEBUG=${REMOTE_DEBUG_PORT}; \
-	bash build.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE) --skip-tests
+	bash build.sh $(BALLERINA_PROJECT) --skip-tests
 
 # Targets: ballerina-project.<project-name>.<module-name>.run
 .PHONY: $(BALLERINA_PROJECT_RUN_TARGETS)
 $(BALLERINA_PROJECT_RUN_TARGETS):
-	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.run,%,$@)))
-	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
-	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.run,%,$@)))
 	cd scripts/ballerina-project; \
-	bash run.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE)
+	bash run.sh $(BALLERINA_PROJECT)
 
 # Targets: ballerina-project.<project-name>.<module-name>.run.debug
 .PHONY: $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS)
 $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS):
-	$(eval BALLERINA_PROJECT_AND_MODULE=$(subst ., ,$(patsubst ballerina-project.%.run.debug,%,$@)))
-	$(eval BALLERINA_PROJECT=$(word 1, $(BALLERINA_PROJECT_AND_MODULE)))
-	$(eval BALLERINA_MODULE=$(word 2, $(BALLERINA_PROJECT_AND_MODULE)))
+	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.run.debug,%,$@)))
 	cd scripts/ballerina-project; \
-	bash run.sh $(BALLERINA_PROJECT) $(BALLERINA_MODULE) -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
+	bash run.sh $(BALLERINA_PROJECT) -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
 
 #
 # Miscelaneous targets starts here

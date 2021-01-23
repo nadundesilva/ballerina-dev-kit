@@ -3,9 +3,8 @@
 set -e
 
 # Main Params
-DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT=2
+DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT=1
 DEV_BALLERINA_PROJECT_NAME="$1"
-DEV_BALLERINA_MODULE_NAME="$2"
 
 DEV_BALLERINA_CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -14,12 +13,12 @@ source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../properties.sh"
 # shellcheck source=../utils.sh
 source "${DEV_BALLERINA_CURRENT_SCRIPT_DIR}/../utils.sh"
 
+DEV_BALLERINA_PROJECT_PATH="${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}"
+
 if [ ! -d "${DEV_BALLERINA_PACK}" ]; then
   echo "Ballerina Pack: ${DEV_BALLERINA_PACK} not found"
   bash "${DEV_BALLERINA_ROOT_DIR}/scripts/ballerina-pack/build.sh"
 fi
-
-pushd "${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}" || exit 1
 
 DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE=$(realpath "./ballerina-internal.log")
 if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
@@ -33,9 +32,9 @@ if [ -d "${DEV_BALLERINA_PROJECT_TARGET_DIR}" ]; then
   rm -rf "${DEV_BALLERINA_PROJECT_TARGET_DIR}"
 fi
 
-echo "Building Ballerina Module ${DEV_BALLERINA_MODULE_NAME} in Project ${DEV_BALLERINA_PROJECT_NAME}"
+echo "Building Ballerina Project ${DEV_BALLERINA_PROJECT_PATH}"
 echo
-"${DEV_BALLERINA_EXECUTABLE}" build "${@:$((DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT + 1))}" -a
+"${DEV_BALLERINA_EXECUTABLE}" build "${@:$((DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT + 1))}" "${DEV_BALLERINA_PROJECT_PATH}"
 echo
 
 if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
@@ -45,5 +44,3 @@ if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
   echo
   cat "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
 fi
-
-popd || exit 1

@@ -36,6 +36,14 @@ DEV_BALLERINA_VERSION=$(< "${DEV_BALLERINA_DISTRIBUTION_REPO}/gradle.properties"
 export DEV_BALLERINA_VERSION
 echo "Ballerina Version: ${DEV_BALLERINA_VERSION}"
 
+DEV_BALLERINA_SHORT_VERSION=$(< "${DEV_BALLERINA_DISTRIBUTION_REPO}/gradle.properties" grep "^shortVersion=" | cut -d'=' -f2)
+export DEV_BALLERINA_SHORT_VERSION
+echo "Ballerina Short Version: ${DEV_BALLERINA_SHORT_VERSION}"
+
+DEV_BALLERINA_PROJECT_VERSION=$(< "${DEV_BALLERINA_DISTRIBUTION_REPO}/gradle.properties" grep "^ballerinaVersion=" | cut -d'=' -f2)
+export DEV_BALLERINA_PROJECT_VERSION
+echo "Ballerina Project Version: ${DEV_BALLERINA_PROJECT_VERSION}"
+
 DEV_BALLERINA_PACK_NAME="ballerina-linux-${DEV_BALLERINA_VERSION}"
 export DEV_BALLERINA_PACK_NAME
 echo "Ballerina Pack Name: ${DEV_BALLERINA_PACK_NAME}"
