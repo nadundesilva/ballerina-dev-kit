@@ -8,10 +8,6 @@ fi
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-echo "Reading Secrets"
-# shellcheck source=./secrets.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/secrets.sh"
-
 echo
 echo "================================="
 echo " Ballerina Dev Kit Configuration "
@@ -52,7 +48,7 @@ DEV_BALLERINA_PACK="${DEV_BALLERINA_PACKS_DIR}/${DEV_BALLERINA_PACK_NAME}"
 export DEV_BALLERINA_PACK
 echo "Ballerina Pack: ${DEV_BALLERINA_PACK}"
 
-DEV_BALLERINA_EXECUTABLE="${DEV_BALLERINA_PACK}/bin/ballerina"
+DEV_BALLERINA_EXECUTABLE="${DEV_BALLERINA_PACK}/bin/bal"
 export DEV_BALLERINA_EXECUTABLE
 echo "Ballerina Executable: ${DEV_BALLERINA_EXECUTABLE}"
 

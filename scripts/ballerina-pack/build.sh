@@ -60,7 +60,7 @@ fi
 BALLERINA_PACK_DIR=$(dirname "${DEV_BALLERINA_PACK}")
 echo "Unzipping new Ballerina Pack to ${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}"
 unzip "${DEV_BALLERINA_PACK_ZIP}" -d "${BALLERINA_PACK_DIR}" > /dev/null
-sudo chmod -R 777 "${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}/bin/ballerina"
+sudo chmod -R 777 "${DEV_BALLERINA_EXECUTABLE}"
 
 AZURE_FUNCTIONS_PLUGIN_JAR=${BALLERINA_PACK_DIR}/${DEV_BALLERINA_PACK_NAME}/distributions/ballerina-${DEV_BALLERINA_SHORT_VERSION}/bre/lib/azurefunctions-extension-${DEV_BALLERINA_PROJECT_VERSION}.jar
 if [ -f "${AZURE_FUNCTIONS_PLUGIN_JAR}" ]; then
