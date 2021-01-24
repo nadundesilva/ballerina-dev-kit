@@ -8,7 +8,7 @@ on:
     - master
 
 jobs:
-  ballerina_pack_build_with_build_cache:
+  build_ballerina_pack_with_build_cache:
     name: Build Ballerina Pack with Cache
     strategy:
       matrix:
@@ -32,10 +32,10 @@ jobs:
       - name: Upload Pack
         uses: actions/upload-artifact@v2
         with:
-          name: Ballerina Pack (${{ matrix.os }})
+          name: Ballerina Pack (${{ matrix.os }} - With Build Cache)
           if-no-files-found: error
           path: packs/ballerina-*.zip
-  ballerina_pack_build:
+  build_ballerina_pack:
     name: Build Ballerina Pack
     strategy:
       matrix:
@@ -56,9 +56,15 @@ jobs:
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
         make ballerina-pack.build
-  test_pack_build_in_place_update:
-    name: Test Ballerina Pack in-place Update
-    needs: ballerina_pack_build_with_build_cache
+    - name: Upload Pack
+      uses: actions/upload-artifact@v2
+      with:
+        name: Ballerina Pack (${{ matrix.os }} - No Build Cache)
+        if-no-files-found: error
+        path: packs/ballerina-*.zip
+  build_ballerina_pack_in_place_update:
+    name: Build Ballerina Pack in-place Update
+    needs: build_ballerina_pack_with_build_cache
     strategy:
       matrix:
         os: ["ubuntu-20.04", "macos-10.15"]
@@ -75,7 +81,7 @@ jobs:
       - name: Download Pack
         uses: actions/download-artifact@v2
         with:
-          name: Ballerina Pack (${{ matrix.os }})
+          name: Ballerina Pack (${{ matrix.os }} - No Build Cache)
           path: packs
       - name: Unzip Pack
         run: bash scripts/ballerina-pack/unzipPack.sh
@@ -85,11 +91,21 @@ jobs:
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           make ballerina-pack.build.in-place-update
+      - name: Upload Pack
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ballerina Pack (${{ matrix.os }} - In-place Update)
+          if-no-files-found: error
+          path: packs/ballerina-*.zip
   test_projects:
     name: Test Build Projects
-    needs: ballerina_pack_build_with_build_cache
+    needs:
+    - build_ballerina_pack_with_build_cache
+    - build_ballerina_pack
+    - build_ballerina_pack_in_place_update
     strategy:
       matrix:
+        pack: ["With Build Cache", "No Build Cache", "In-place Update"]
         os: ["ubuntu-20.04", "macos-10.15"]
         project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
     runs-on: ${{ matrix.os }}
@@ -105,7 +121,7 @@ jobs:
       - name: Download Pack
         uses: actions/download-artifact@v2
         with:
-          name: Ballerina Pack (${{ matrix.os }})
+          name: Ballerina Pack (${{ matrix.os }} - ${{ matrix.pack }})
           path: packs
       - name: Unzip Pack
         run: bash scripts/ballerina-pack/unzipPack.sh
