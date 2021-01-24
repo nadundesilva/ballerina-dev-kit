@@ -12,27 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import ballerina/io;
 import ballerina/test;
-
-# Before Suite Function
-
-@test:BeforeSuite
-function beforeSuiteServiceFunc() {
-    io:println("I'm the before suite service function!");
-}
-
-# Test function
+import ballerina/http;
 
 @test:Config {}
-function testServiceFunction() {
-    io:println("Do your service Tests!");
-    test:assertTrue(true, msg = "Failed!");
-}
-
-# After Suite Function
-
-@test:AfterSuite{ alwaysRun : true }
-function afterSuiteServiceFunc() {
-    io:println("I'm the after suite service function!");
+function testHelloWorldService() returns error? {
+    http:Client clientEP = check new("http://localhost:10010/hello");
+    string response = <string> check clientEP->get("/sayHello", targetType = string);
+    test:assertEquals(response, "Hello from Ballerina Dev Kit!");
 }

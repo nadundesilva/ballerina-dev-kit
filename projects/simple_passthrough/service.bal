@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import ballerina/io;
-import ballerina/log;
 import ballerina/http;
 import ballerinax/prometheus as _;
 import ballerinax/jaeger as _;
@@ -31,12 +30,12 @@ service /simplePassThrough on new http:Listener(10011) {
     resource function get passThroughToPostman(http:Caller caller, http:Request request) {
 	    http:Client clientEndpoint = checkpanic new("http://postman-echo.com");
 
-        log:print("Sending GET Request to Postman Echo");
+        io:println("Sending GET Request to Postman Echo");
         var response = clientEndpoint->get("/get?test=123");
         if (response is http:Response) {
             var msg = response.getJsonPayload();
             if (msg is json) {
-                io:println(msg.toJsonString());
+                io:println("Received Payload for GET Request: " + msg.toJsonString());
             } else {
                 io:println("Invalid payload received:", msg.message());
             }
@@ -44,12 +43,12 @@ service /simplePassThrough on new http:Listener(10011) {
             io:println("Error when calling the backend: ", (<error> response).message());
         }
 
-        log:print("Sending POST Request to Postman Echo");
+        io:println("Sending POST Request to Postman Echo");
         response = clientEndpoint->post("/post", "POST: Hello World");
         if (response is http:Response) {
             var msg = response.getJsonPayload();
             if (msg is json) {
-                io:println(msg.toJsonString());
+                io:println("Received Payload for POST Request: " + msg.toJsonString());
             } else {
                 io:println("Invalid payload received:", msg.message());
             }
