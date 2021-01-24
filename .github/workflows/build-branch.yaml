@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - master
+    - main
 
 jobs:
   build_ballerina_pack_with_build_cache:

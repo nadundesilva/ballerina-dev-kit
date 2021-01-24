@@ -1,6 +1,6 @@
 # Ballerina Development Kit
 
-[![Build](https://github.com/nadundesilva/ballerina-dev-kit/workflows/Build%20Branch/badge.svg)](https://github.com/nadundesilva/ballerina-dev-kit/actions?query=workflow%3A"Build+Branch"+branch%3Amaster)
+[![Build](https://github.com/nadundesilva/ballerina-dev-kit/workflows/Build%20Branch/badge.svg)](https://github.com/nadundesilva/ballerina-dev-kit/actions?query=workflow%3A"Build+Branch"+branch%3Amain)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/nadundesilva/ballerina-dev-kit.svg)](https://github.com/nadundesilva/ballerina-dev-kit/commits/master)
 [![Github issues](https://img.shields.io/github/issues/nadundesilva/ballerina-dev-kit?label=Open%20Issues)](https://github.com/nadundesilva/ballerina-dev-kit/issues)
 
