@@ -1,5 +1,7 @@
 import logging
 import os
+import subprocess
+from typing import List
 
 
 def read_env(key: str, default_value=None) -> str:
@@ -23,7 +25,7 @@ def repo_exists(repo: str) -> bool:
     :param repo: The URL of the repository
     :return: True if the repository exists
     """
-    return _execute_command("git ls-remote %s" % repo) == 0
+    return _execute_command(["git", "ls-remote", repo]) == 0
 
 
 def clone_repo(repo: str, output_dir: str):
@@ -35,7 +37,7 @@ def clone_repo(repo: str, output_dir: str):
     """
     if os.path.exists(output_dir):
         if os.path.isdir(output_dir):
-            exit_code = _execute_command("git rev-parse --git-dir 2> /dev/null")
+            exit_code = _execute_command(["git", "rev-parse", "--git-dir"])
             if exit_code == 0:
                 logging.warning("Ignoring already existing repository %s found in %s" % (repo, output_dir))
             else:
@@ -43,18 +45,20 @@ def clone_repo(repo: str, output_dir: str):
         else:
             raise Exception("Path %s already exists and not a directory" % output_dir)
     else:
-        exit_code = _execute_command("git clone %s %s" % (repo, output_dir))
+        exit_code = _execute_command(["git", "clone", repo, output_dir])
         if exit_code == 0:
             logging.debug("Cloned repository %s to directory %s" % (repo, output_dir))
         else:
             raise Exception("Failed to clone repository " + repo)
 
 
-def _execute_command(command: str) -> int:
+def _execute_command(command: List[str]) -> int:
     """
     Execute a command.
 
     :param command: The command to be executed
     :return: The exit code of the command
     """
-    return os.system(command)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process.wait()
+    return process.returncode
