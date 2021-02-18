@@ -3,6 +3,8 @@ import os
 import subprocess
 from typing import List
 
+LOGGER = logging.getLogger("utils")
+
 
 def read_env(key: str, default_value=None) -> str:
     """
@@ -39,7 +41,7 @@ def clone_repo(repo: str, output_dir: str):
         if os.path.isdir(output_dir):
             exit_code = _execute_command(["git", "rev-parse", "--git-dir"])
             if exit_code == 0:
-                logging.warning("Ignoring already existing repository %s found in %s" % (repo, output_dir))
+                LOGGER.warning("Ignoring already existing repository %s found in %s" % (repo, output_dir))
             else:
                 raise Exception("Existing directory %s is not git repository" % output_dir)
         else:
@@ -47,7 +49,7 @@ def clone_repo(repo: str, output_dir: str):
     else:
         exit_code = _execute_command(["git", "clone", repo, output_dir])
         if exit_code == 0:
-            logging.debug("Cloned repository %s to directory %s" % (repo, output_dir))
+            LOGGER.debug("Cloned repository %s to directory %s" % (repo, output_dir))
         else:
             raise Exception("Failed to clone repository " + repo)
 

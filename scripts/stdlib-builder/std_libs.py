@@ -2,6 +2,8 @@ import logging
 from typing import Tuple, List
 import re
 
+LOGGER = logging.getLogger("std_libs")
+
 DependencyLevel = Tuple[int, List[Tuple[str, str]]]
 
 
@@ -15,7 +17,7 @@ def build_dependency_levels(level_declaration_props: str) -> List[DependencyLeve
     level_title_pattern = re.compile("# Stdlib Level (\\d+)")
     stdlib_version_pattern = re.compile("stdlib([a-zA-Z0-9]+)Version=(.+)")
 
-    logging.info("Building Standard Library Dependency Levels")
+    LOGGER.info("Building Standard Library Dependency Levels")
     levels = []
     current_level = None
     for line in level_declaration_props.split("\n"):
@@ -32,7 +34,7 @@ def build_dependency_levels(level_declaration_props: str) -> List[DependencyLeve
                 current_level[1].append((package_name.lower(), package_version))
             else:
                 current_level = None
-                logging.debug("Ignored Property Line: %s" % line)
+                LOGGER.debug("Ignored Property Line: %s" % line)
 
     levels.sort(key=_get_dependency_tree_node_level)
     _print_dependency_levels(levels)
@@ -80,4 +82,4 @@ def _print_dependency_levels(levels: List[DependencyLevel]):
         print("\tLevel %s" % level[0])
         for lib in level[1]:
             print("\t\t%s - %s" % (lib[0], lib[1]))
-    print("\n")
+    print()
