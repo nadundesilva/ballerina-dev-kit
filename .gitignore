@@ -1,6 +1,10 @@
+# IDEs
 .idea/
 
+# Python
 __pycache__
 
+# Dev Kit Files
 packs/
 .choreoproject
+repos/std-libs/
