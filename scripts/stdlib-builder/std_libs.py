@@ -13,7 +13,7 @@ BALLERINA_REPO_URL = "https://github.com/ballerina-platform/%s.git"
 
 LOGGER = logging.getLogger("std_libs")
 
-DependencyLevel = Tuple[int, List[Tuple[str, str]]]
+_DependencyLevel = Tuple[int, List[Tuple[str, str]]]  # tuple(level_number, list(tuple(package_name, package_version)))
 Repo = Tuple[str, str]
 
 
@@ -30,20 +30,17 @@ def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
                                   in [line.split("=") for line in overrides_file_lines]}
 
         # Identifying the standard library build levels to be used
-        dependency_levels = _build_dependency_levels(response.content.decode("utf-8"))
+        dependency_levels = _build_dependency_levels(response.content.decode("utf-8"), std_lib_name_overrides)
         dependency_libs = [dependency_lib[0] for dependency_level in dependency_levels
                            for dependency_lib in dependency_level[1]]
-        dependency_libs = [std_lib_name_overrides[dependency_lib]
-                           if dependency_lib in std_lib_name_overrides
-                           else dependency_lib
-                           for dependency_lib in dependency_libs]
 
-        repos = []
+        # Detecting existing modules and creating the list of repositories
         module_repo_name_templates = [BALLERINA_STD_LIB_MODULE_REPO_NAME, BALLERINA_INTERNAL_STD_LIB_MODULE_REPO_NAME,
                                       BALLERINA_EXTERNAL_STD_LIB_MODULE_REPO_NAME]
+        repos = []
         for lib in dependency_libs:
             is_lib_available = False
-            for repo_name_template in module_repo_name_templates:   # Checking through repos to find an existing repo
+            for repo_name_template in module_repo_name_templates:  # Checking through repos to find an existing repo
                 repo_name = repo_name_template % lib
                 repo_url = BALLERINA_REPO_URL % repo_name
                 if utils.repo_exists(repo_url):
@@ -58,7 +55,8 @@ def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
                         response.status_code)
 
 
-def _build_dependency_levels(level_declaration_props: str) -> List[DependencyLevel]:
+def _build_dependency_levels(level_declaration_props: str, package_name_overrides: {str: str}) \
+        -> List[_DependencyLevel]:
     """
     Build the dependency levels mentioned in the properties file.
 
@@ -80,7 +78,7 @@ def _build_dependency_levels(level_declaration_props: str) -> List[DependencyLev
         else:  # Standard Library Version Line
             stdlib_version_match = stdlib_version_pattern.match(line)
             if current_level is not None and len(line) > 0 and not (line.isspace()) and stdlib_version_match:
-                package_name = _get_package_name(stdlib_version_match.group(1))
+                package_name = _get_package_name(stdlib_version_match.group(1), package_name_overrides)
                 package_version = stdlib_version_match.group(2)
                 current_level[1].append((package_name.lower(), package_version))
             else:
@@ -92,7 +90,7 @@ def _build_dependency_levels(level_declaration_props: str) -> List[DependencyLev
     return levels
 
 
-def _get_package_name(version_prop_key: str) -> str:
+def _get_package_name(version_prop_key: str, name_overrides: {str: str}) -> str:
     """
     Generate the package name from the property key of the version property in the level declaration.
 
@@ -108,10 +106,10 @@ def _get_package_name(version_prop_key: str) -> str:
         else:
             module_name += current_letter
         i += 1
-    return module_name
+    return name_overrides[module_name] if module_name in name_overrides else module_name
 
 
-def _get_dependency_tree_node_level(level_node: DependencyLevel) -> int:
+def _get_dependency_tree_node_level(level_node: _DependencyLevel) -> int:
     """
     Get the dependency tree node level number.
     This can be used in functions such as sort.
@@ -122,7 +120,7 @@ def _get_dependency_tree_node_level(level_node: DependencyLevel) -> int:
     return level_node[0]
 
 
-def _print_dependency_levels(levels: List[DependencyLevel]):
+def _print_dependency_levels(levels: List[_DependencyLevel]):
     """
     Print the dependency levels in proper readable format.
 
