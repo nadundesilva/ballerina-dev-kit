@@ -28,7 +28,7 @@ def repo_exists(repo: str) -> bool:
     :param repo: The URL of the repository
     :return: True if the repository exists
     """
-    return _execute_command(["git", "ls-remote", repo]) == 0
+    return _execute_command(["git", "ls-remote", repo, "HEAD"]) == 0
 
 
 def clone_repo(repo: str, output_dir: str):

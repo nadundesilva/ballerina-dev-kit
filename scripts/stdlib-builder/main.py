@@ -25,4 +25,4 @@ if __name__ == "__main__":
     # Cloning the repositories
     std_libs_dir = utils.read_env(STD_LIBS_REPOS_DIR_ENV_VAR_KEY, STD_LIBS_REPOS_DIR_ENV_VAR_DEFAULT)
     for repo in repos_list:
-        utils.clone_repo(repo[1], os.path.join(std_libs_dir, repo[0]))
+        utils.clone_repo(repo["name"], os.path.join(std_libs_dir, repo["url"]))

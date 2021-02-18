@@ -1,7 +1,7 @@
 import logging
-from typing import Tuple, List
 import re
 import requests
+from typing import Tuple, List, TypedDict
 import utils
 
 BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE = "https://raw.githubusercontent.com/ballerina-platform" \
@@ -14,14 +14,18 @@ BALLERINA_REPO_URL = "https://github.com/ballerina-platform/%s.git"
 LOGGER = logging.getLogger("std_libs")
 
 _DependencyLevel = Tuple[int, List[Tuple[str, str]]]  # tuple(level_number, list(tuple(package_name, package_version)))
-Repo = Tuple[str, str]
+
+
+class Repo(TypedDict):
+    name: str
+    url: str
 
 
 def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
     """
     Get the list of standard library levels.
 
-    :return: The list of levels
+    :return: The list of levels ordered by the expected build order
     """
     response = requests.get(BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE)
     if response.status_code == 200:
@@ -45,7 +49,7 @@ def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
                 repo_url = BALLERINA_REPO_URL % repo_name
                 if utils.repo_exists(repo_url):
                     LOGGER.debug("Detected existing module " + repo_name)
-                    repos.append((repo_url, repo_name))
+                    repos.append({"name": repo_url, "url": repo_name})
                     is_lib_available = True
             if not is_lib_available:
                 raise Exception("No module repository found for %s" % lib)
