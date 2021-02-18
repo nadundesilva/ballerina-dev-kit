@@ -1,13 +1,64 @@
 import logging
 from typing import Tuple, List
 import re
+import requests
+import utils
+
+BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE = "https://raw.githubusercontent.com/ballerina-platform" \
+                                           "/ballerina-distribution/master/gradle.properties"
+BALLERINA_STD_LIB_MODULE_REPO_NAME = "module-ballerina-%s"
+BALLERINA_INTERNAL_STD_LIB_MODULE_REPO_NAME = "module-ballerinai-%s"
+BALLERINA_EXTERNAL_STD_LIB_MODULE_REPO_NAME = "module-ballerinax-%s"
+BALLERINA_REPO_URL = "https://github.com/ballerina-platform/%s.git"
 
 LOGGER = logging.getLogger("std_libs")
 
 DependencyLevel = Tuple[int, List[Tuple[str, str]]]
+Repo = Tuple[str, str]
 
 
-def build_dependency_levels(level_declaration_props: str) -> List[DependencyLevel]:
+def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
+    """
+    Get the list of standard library levels.
+
+    :return: The list of levels
+    """
+    response = requests.get(BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE)
+    if response.status_code == 200:
+        # Reading the standard library name overrides
+        std_lib_name_overrides = {line_split[0]: line_split[1].strip() for line_split
+                                  in [line.split("=") for line in overrides_file_lines]}
+
+        # Identifying the standard library build levels to be used
+        dependency_levels = _build_dependency_levels(response.content.decode("utf-8"))
+        dependency_libs = [dependency_lib[0] for dependency_level in dependency_levels
+                           for dependency_lib in dependency_level[1]]
+        dependency_libs = [std_lib_name_overrides[dependency_lib]
+                           if dependency_lib in std_lib_name_overrides
+                           else dependency_lib
+                           for dependency_lib in dependency_libs]
+
+        repos = []
+        module_repo_name_templates = [BALLERINA_STD_LIB_MODULE_REPO_NAME, BALLERINA_INTERNAL_STD_LIB_MODULE_REPO_NAME,
+                                      BALLERINA_EXTERNAL_STD_LIB_MODULE_REPO_NAME]
+        for lib in dependency_libs:
+            is_lib_available = False
+            for repo_name_template in module_repo_name_templates:   # Checking through repos to find an existing repo
+                repo_name = repo_name_template % lib
+                repo_url = BALLERINA_REPO_URL % repo_name
+                if utils.repo_exists(repo_url):
+                    LOGGER.debug("Detected existing module " + repo_name)
+                    repos.append((repo_url, repo_name))
+                    is_lib_available = True
+            if not is_lib_available:
+                raise Exception("No module repository found for %s" % lib)
+        return repos
+    else:
+        raise Exception("Downloading Ballerina Distribution Gradle properties file failed with status code %s" %
+                        response.status_code)
+
+
+def _build_dependency_levels(level_declaration_props: str) -> List[DependencyLevel]:
     """
     Build the dependency levels mentioned in the properties file.
 
