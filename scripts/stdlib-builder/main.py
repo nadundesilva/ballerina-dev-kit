@@ -1,3 +1,4 @@
+import cache
 import logging
 import os
 import std_libs
@@ -19,8 +20,8 @@ if __name__ == "__main__":
     # Creating the ordered list of repositories
     std_lib_name_overrides_file_path = utils.read_env(STD_LIB_NAME_OVERRIDES_FILE_ENV_VAR_KEY,
                                                       STD_LIB_NAME_OVERRIDES_FILE_ENV_VAR_DEFAULT)
-    std_lib_name_overrides_file = open(std_lib_name_overrides_file_path, "r", encoding="utf-8")
-    repos_list = std_libs.get_ordered_std_lib_repos(std_lib_name_overrides_file.readlines())
+    with open(std_lib_name_overrides_file_path, "r", encoding="utf-8") as std_lib_name_overrides_file:
+        repos_list = std_libs.get_ordered_std_lib_repos(std_lib_name_overrides_file.readlines())
 
     # Cloning the repositories
     std_libs_dir = utils.read_env(STD_LIBS_REPOS_DIR_ENV_VAR_KEY, STD_LIBS_REPOS_DIR_ENV_VAR_DEFAULT)
