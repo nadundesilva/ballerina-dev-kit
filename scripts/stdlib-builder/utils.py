@@ -31,18 +31,20 @@ def repo_exists(repo: str) -> bool:
     return _execute_command(["git", "ls-remote", repo, "HEAD"]) == 0
 
 
-def clone_repo(repo: str, output_dir: str):
+def clone_repo(repo: str, output_dir: str) -> bool:
     """
     Clone a Git repository.
 
     :param repo: The URL of the Git repository
     :param output_dir: The directory to which the repository should be cloned to
+    :return: True if repository was cloned
     """
     if os.path.exists(output_dir):
         if os.path.isdir(output_dir):
             exit_code = _execute_command(["git", "rev-parse", "--git-dir"])
             if exit_code == 0:
-                LOGGER.warning("Ignoring already existing repository %s found in %s" % (repo, output_dir))
+                LOGGER.debug("Ignoring already existing repository %s found in %s" % (repo, output_dir))
+                return False
             else:
                 raise Exception("Existing directory %s is not git repository" % output_dir)
         else:
@@ -51,6 +53,7 @@ def clone_repo(repo: str, output_dir: str):
         exit_code = _execute_command(["git", "clone", repo, output_dir])
         if exit_code == 0:
             LOGGER.debug("Cloned repository %s to directory %s" % (repo, output_dir))
+            return True
         else:
             raise Exception("Failed to clone repository " + repo)
 

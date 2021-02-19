@@ -17,7 +17,7 @@ def store(key: str, data: Any):
         pickle.dump(data, f)
 
 
-def load(key: str) -> object:
+def load(key: str) -> Any:
     """
     Load data from the cache using a key.
 
