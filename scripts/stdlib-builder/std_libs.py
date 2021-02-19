@@ -1,7 +1,7 @@
 import logging
 import re
 import requests
-from typing import Tuple, List, TypedDict
+from typing import Tuple, List, TypedDict, Dict
 import utils
 
 _BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE = "https://raw.githubusercontent.com/ballerina-platform" \
@@ -21,7 +21,7 @@ class Repo(TypedDict):
     url: str
 
 
-def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
+def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str]) -> List[Repo]:
     """
     Get the list of standard library levels.
 
@@ -30,10 +30,6 @@ def get_ordered_std_lib_repos(overrides_file_lines: List[str]) -> List[Repo]:
     """
     response = requests.get(_BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE)
     if response.status_code == 200:
-        # Reading the standard library name overrides
-        std_lib_name_overrides = {line_split[0]: line_split[1].strip() for line_split
-                                  in [line.split("=") for line in overrides_file_lines]}
-
         # Identifying the standard library build levels to be used
         dependency_levels = _build_dependency_levels(response.content.decode("utf-8"), std_lib_name_overrides)
         dependency_libs = [dependency_lib[0] for dependency_level in dependency_levels

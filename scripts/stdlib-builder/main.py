@@ -34,11 +34,16 @@ def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str, lo
         std_lib_name_overrides_file_path = os.path.abspath(name_overrides_file)
         _LOGGER.debug("Using Standard Library overrides file %s" % std_lib_name_overrides_file_path)
 
+        # Reading the standard library name overrides
         with open(std_lib_name_overrides_file_path, "r", encoding="utf-8") as std_lib_name_overrides_file:
-            repos_list = std_libs.get_ordered_std_lib_repos(std_lib_name_overrides_file.readlines())
-            _LOGGER.info("Loaded Standard Library list of size %d from properties file" % len(repos_list))
-            cache.store(_STD_LIBS_REPO_LIST_CACHE_KEY, repos_list)
-            _LOGGER.debug("Stored Standard Library list of size %d into cache" % len(repos_list))
+            std_lib_name_overrides = {line_split[0]: line_split[1].strip() for line_split
+                                      in [line.split("=") for line in std_lib_name_overrides_file.readlines()]}
+
+        # Generating the ordered list of standard library repos list
+        repos_list = std_libs.get_ordered_std_lib_repos(std_lib_name_overrides)
+        _LOGGER.info("Loaded Standard Library list of size %d from properties file" % len(repos_list))
+        cache.store(_STD_LIBS_REPO_LIST_CACHE_KEY, repos_list)
+        _LOGGER.debug("Stored Standard Library list of size %d into cache" % len(repos_list))
 
     # Cloning the repositories
     std_libs_dir = os.path.abspath(output_dir)
