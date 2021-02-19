@@ -13,19 +13,16 @@ _LOGGER = logging.getLogger("main")
 
 
 @click.group("std-libs")
-def std_libs_cli():
-    pass
+@click.option("--log-level", type=click.Choice(["WARNING", "DEBUG", "INFO"], case_sensitive=False), default="INFO")
+def init_cli(log_level: str):
+    logging.basicConfig(level=logging.getLevelName(log_level), format=_LOG_FORMAT)
 
 
 @click.command("clone")
 @click.option("--no-cache", type=bool, default=False)
 @click.option("--output-dir", type=str, default="std_libs")
 @click.option("--name-overrides-file", type=str, default="std-lib-name-overrides.properties")
-@click.option("--log-level", type=click.Choice(["DEBUG", "INFO"], case_sensitive=False), default="INFO")
-def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str, log_level: str):
-    # Initializing logger
-    logging.basicConfig(level=logging.getLevelName(log_level), format=_LOG_FORMAT)
-
+def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str):
     if not no_cache and cache.contains(_STD_LIBS_REPO_LIST_CACHE_KEY):
         repos_list: List[std_libs.Repo] = cache.load(_STD_LIBS_REPO_LIST_CACHE_KEY)
         _LOGGER.info("Loaded Standard Library list of size %d from cache" % len(repos_list))
@@ -59,7 +56,7 @@ def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str, lo
         _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (len(repos_list), std_libs_dir))
 
 
-std_libs_cli.add_command(clone_std_libs)
+init_cli.add_command(clone_std_libs)
 
 if __name__ == "__main__":
-    std_libs_cli()
+    init_cli()
