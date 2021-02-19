@@ -1,4 +1,5 @@
 import cache
+import click
 import logging
 import os
 import std_libs
@@ -17,12 +18,20 @@ _STD_LIBS_REPO_LIST_CACHE_KEY = "std_libs_repo_list"
 
 _LOGGER = logging.getLogger("main")
 
-if __name__ == "__main__":
+
+@click.group("std-libs")
+def std_libs_cli():
+    pass
+
+
+@click.command("clone")
+@click.option("--no-cache", type=bool, default=False)
+def clone_std_libs(no_cache: bool):
     # Initializing logger
     log_level = utils.read_env(_LOG_LEVEL_ENV_VAR_KEY, _LOG_LEVEL_ENV_VAR_DEFAULT)
     logging.basicConfig(level=logging.getLevelName(log_level), format=_LOG_FORMAT)
 
-    if cache.contains(_STD_LIBS_REPO_LIST_CACHE_KEY):
+    if not no_cache and cache.contains(_STD_LIBS_REPO_LIST_CACHE_KEY):
         repos_list: List[std_libs.Repo] = cache.load(_STD_LIBS_REPO_LIST_CACHE_KEY)
         _LOGGER.info("Loaded Standard Library list of size %d from cache" % len(repos_list))
     else:
@@ -49,3 +58,9 @@ if __name__ == "__main__":
         _LOGGER.info("All Standard Library Repositories already cloned to %s directory" % std_libs_dir)
     else:
         _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (len(repos_list), std_libs_dir))
+
+
+std_libs_cli.add_command(clone_std_libs)
+
+if __name__ == "__main__":
+    std_libs_cli()
