@@ -6,20 +6,6 @@ from typing import List
 _LOGGER = logging.getLogger("utils")
 
 
-def read_env(key: str, default_value=None) -> str:
-    """
-    Read an environment variable value with a default value.
-
-    :param key: The key of the environment variable
-    :param default_value: The default value to be used if the environment variable is not provided
-    :returns: The environment variable value
-    """
-    if key in os.environ:
-        return os.environ[key]
-    else:
-        return default_value
-
-
 def repo_exists(repo: str) -> bool:
     """
     Check if a Git repository exists.
