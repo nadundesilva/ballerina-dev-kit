@@ -11,7 +11,7 @@ _BALLERINA_INTERNAL_STD_LIB_MODULE_REPO_NAME = "module-ballerinai-%s"
 _BALLERINA_EXTERNAL_STD_LIB_MODULE_REPO_NAME = "module-ballerinax-%s"
 _BALLERINA_REPO_URL = "https://github.com/ballerina-platform/%s.git"
 
-_LOGGER = logging.getLogger("std_libs")
+_LOGGER = logging.getLogger("stdlibs")
 
 _DependencyLevel = Tuple[int, List[Tuple[str, str]]]  # tuple(level_number, list(tuple(package_name, package_version)))
 

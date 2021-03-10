@@ -2,12 +2,12 @@ import cache
 import click
 import logging
 import os
-import std_libs
+import stdlibs
 from typing import List
 import utils
 
 _LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s - %(message)s"
-_STD_LIBS_REPO_LIST_CACHE_KEY = "std_libs_repo_list"
+_STDLIBS_REPO_LIST_CACHE_KEY = "stdlibs_repo_list"
 
 _LOGGER = logging.getLogger("main")
 
@@ -20,11 +20,11 @@ def init_cli(log_level: str):
 
 @click.command("clone")
 @click.option("--no-cache", type=bool, default=False)
-@click.option("--output-dir", type=str, default="std_libs")
+@click.option("--output-dir", type=str, default="stdlibs")
 @click.option("--name-overrides-file", type=str, default="std-lib-name-overrides.properties")
-def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str):
-    if not no_cache and cache.contains(_STD_LIBS_REPO_LIST_CACHE_KEY):
-        repos_list: List[std_libs.Repo] = cache.load(_STD_LIBS_REPO_LIST_CACHE_KEY)
+def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str):
+    if not no_cache and cache.contains(_STDLIBS_REPO_LIST_CACHE_KEY):
+        repos_list: List[stdlibs.Repo] = cache.load(_STDLIBS_REPO_LIST_CACHE_KEY)
         _LOGGER.info("Loaded Standard Library list of size %d from cache" % len(repos_list))
     else:
         # Creating the ordered list of repositories
@@ -37,26 +37,26 @@ def clone_std_libs(no_cache: bool, output_dir: str, name_overrides_file: str):
                                       in [line.split("=") for line in std_lib_name_overrides_file.readlines()]}
 
         # Generating the ordered list of standard library repos list
-        repos_list = std_libs.get_ordered_std_lib_repos(std_lib_name_overrides)
+        repos_list = stdlibs.get_ordered_std_lib_repos(std_lib_name_overrides)
         _LOGGER.info("Loaded Standard Library list of size %d from properties file" % len(repos_list))
-        cache.store(_STD_LIBS_REPO_LIST_CACHE_KEY, repos_list)
+        cache.store(_STDLIBS_REPO_LIST_CACHE_KEY, repos_list)
         _LOGGER.debug("Stored Standard Library list of size %d into cache" % len(repos_list))
 
     # Cloning the repositories
-    std_libs_dir = os.path.abspath(output_dir)
+    stdlibs_dir = os.path.abspath(output_dir)
     _LOGGER.debug("Attempting to clone %d Standard Library Repositories to %s directory"
-                  % (len(repos_list), std_libs_dir))
+                  % (len(repos_list), stdlibs_dir))
     cloned_repo_count = 0
     for repo in repos_list:
-        if utils.clone_repo(repo["name"], os.path.join(std_libs_dir, repo["url"])):
+        if utils.clone_repo(repo["name"], os.path.join(stdlibs_dir, repo["url"])):
             cloned_repo_count += 1
     if cloned_repo_count == 0:
-        _LOGGER.info("All Standard Library Repositories already cloned to %s directory" % std_libs_dir)
+        _LOGGER.info("All Standard Library Repositories already cloned to %s directory" % stdlibs_dir)
     else:
-        _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (len(repos_list), std_libs_dir))
+        _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (len(repos_list), stdlibs_dir))
 
 
-init_cli.add_command(clone_std_libs)
+init_cli.add_command(clone_stdlibs)
 
 if __name__ == "__main__":
     init_cli()

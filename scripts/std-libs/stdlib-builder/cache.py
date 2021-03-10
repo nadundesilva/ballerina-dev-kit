@@ -13,8 +13,8 @@ def store(key: str, data: Any):
     :param key: The cache data key to be used to access later
     :param data: The data to be stored
     """
-    with _open_cache_file(key, "wb") as f:
-        pickle.dump(data, f)
+    with _open_cache_file(key, "wb") as file:
+        pickle.dump(data, file)
 
 
 def load(key: str) -> Any:
@@ -24,8 +24,8 @@ def load(key: str) -> Any:
     :param key: The key which was used to store the data
     :returns: The cached data
     """
-    with _open_cache_file(key, "rb") as f:
-        return pickle.load(f)
+    with _open_cache_file(key, "rb") as file:
+        return pickle.load(file)
 
 
 def contains(key: str) -> bool:
