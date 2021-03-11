@@ -25,5 +25,14 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 pushd stdlib_builder
-python3 main.py clone --output-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}"
+CLONE_ARGS=(clone --output-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}")
+if [[ -n "${CLEANUP_EXTRA_MODULES}" ]]; then
+  if [[ "${CLEANUP_EXTRA_MODULES}" == "true" || "${CLEANUP_EXTRA_MODULES}" == "false" ]]; then
+    CLONE_ARGS+=(--cleanup="${CLEANUP_EXTRA_MODULES}")
+  else
+    echo "Value of CLEANUP_EXTRA_MODULES env var expected to be one of true or false"
+    exit 1
+  fi
+fi
+python3 main.py  "${CLONE_ARGS[@]}"
 popd

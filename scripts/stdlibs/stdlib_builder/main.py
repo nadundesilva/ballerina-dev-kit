@@ -15,6 +15,7 @@ import cache
 import click
 import logging
 import os
+import shutil
 import stdlibs
 from typing import List
 import utils
@@ -35,7 +36,8 @@ def init_cli(log_level: str):
 @click.option("--no-cache", type=bool, default=False)
 @click.option("--output-dir", type=str, default="stdlibs")
 @click.option("--name-overrides-file", type=str, default="std-lib-name-overrides.properties")
-def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str):
+@click.option("--cleanup", type=bool)
+def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str, cleanup: bool):
     if not no_cache and cache.contains(_STDLIBS_REPO_LIST_CACHE_KEY):
         repos_list: List[stdlibs.Repo] = cache.load(_STDLIBS_REPO_LIST_CACHE_KEY)
         _LOGGER.info("Loaded Standard Library list of size %d from cache" % len(repos_list))
@@ -63,12 +65,26 @@ def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str):
                   % (len(repos_list), stdlibs_dir))
     cloned_repo_count = 0
     for repo in repos_list:
-        if utils.clone_repo(repo["name"], os.path.join(stdlibs_dir, repo["url"])):
+        if utils.clone_repo(repo["url"], os.path.join(stdlibs_dir, repo["name"])):
             cloned_repo_count += 1
     if cloned_repo_count == 0:
         _LOGGER.info("All Standard Library Repositories already cloned to %s directory" % stdlibs_dir)
     else:
         _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (cloned_repo_count, stdlibs_dir))
+
+    # Cleaning up the repositories
+    if cleanup or cleanup is None:
+        extra_modules = [module for module in filter(
+            lambda stdlib_repo_dir: (stdlib_repo_dir.startswith("module-") and
+                                     stdlib_repo_dir not in [repo_list_item["name"] for repo_list_item in repos_list]),
+            os.listdir(output_dir))]
+        extra_module_count = len(extra_modules)
+        if extra_module_count > 0:
+            _LOGGER.info("Found extra repos: " + str(extra_modules))
+            if (cleanup or click.confirm("Would you like cleanup the %d extra repo(s) ?" % extra_module_count,
+                                         default=True)):
+                for module in extra_modules:
+                    shutil.rmtree(os.path.join(stdlibs_dir, module))
 
 
 init_cli.add_command(clone_stdlibs)

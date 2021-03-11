@@ -59,7 +59,7 @@ def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str]) -> List[Re
                 repo_url = _BALLERINA_REPO_URL % repo_name
                 if utils.repo_exists(repo_url):
                     _LOGGER.debug("Detected existing module " + repo_name)
-                    repos.append({"name": repo_url, "url": repo_name})
+                    repos.append({"name": repo_name, "url": repo_url})
                     is_lib_available = True
             if not is_lib_available:
                 raise Exception("No module repository found for %s" % lib)
