@@ -11,12 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json
 import logging
 import os
 import subprocess
-from typing import Tuple
+from typing import Dict, List, Tuple, TypedDict
 
 _LOGGER = logging.getLogger("utils")
+
+
+class Config(TypedDict):
+    nameOverrides: Dict[str, str]
+    ignored: List[str]
 
 
 def repo_exists(repo: str) -> bool:
@@ -69,3 +75,15 @@ def execute_command(command: Tuple, **p_open_args) -> int:
     process = subprocess.Popen(command, **p_open_args)
     process.wait()
     return process.returncode
+
+
+def read_config(config_file_path: str) -> Config:
+    """
+    Read the configuration from a file path.
+
+    :param config_file_path: The path of the configuration file
+    :return: The configuration
+    """
+    _LOGGER.debug("Using the configuration file %s" % config_file_path)
+    with open(config_file_path, "r", encoding="utf-8") as config_file:
+        return json.load(config_file)

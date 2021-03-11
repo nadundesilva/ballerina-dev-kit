@@ -34,7 +34,7 @@ class Repo(TypedDict):
     url: str
 
 
-def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str]) -> List[Repo]:
+def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str], ignored_stdlibs: List[str]) -> List[Repo]:
     """
     Get the list of standard library levels.
 
@@ -44,7 +44,8 @@ def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str]) -> List[Re
     response = requests.get(_BALLERINA_DISTRIBUTION_GRADLE_PROPS_FILE)
     if response.status_code == 200:
         # Identifying the standard library build levels to be used
-        dependency_levels = _build_dependency_levels(response.content.decode("utf-8"), std_lib_name_overrides)
+        dependency_levels = _build_dependency_levels(response.content.decode("utf-8"), std_lib_name_overrides,
+                                                     ignored_stdlibs)
         dependency_libs = [dependency_lib[0] for dependency_level in dependency_levels
                            for dependency_lib in dependency_level[1]]
 
@@ -69,7 +70,8 @@ def get_ordered_std_lib_repos(std_lib_name_overrides: Dict[str, str]) -> List[Re
                         response.status_code)
 
 
-def _build_dependency_levels(level_declaration_props: str, package_name_overrides: {str: str}) \
+def _build_dependency_levels(level_declaration_props: str, package_name_overrides: {str: str},
+                             ignored_stdlibs: List[str]) \
         -> List[_DependencyLevel]:
     """
     Build the dependency levels mentioned in the properties file.
@@ -93,8 +95,11 @@ def _build_dependency_levels(level_declaration_props: str, package_name_override
             stdlib_version_match = stdlib_version_pattern.match(line)
             if current_level is not None and len(line) > 0 and not (line.isspace()) and stdlib_version_match:
                 package_name = _get_package_name(stdlib_version_match.group(1), package_name_overrides)
-                package_version = stdlib_version_match.group(2)
-                current_level[1].append((package_name.lower(), package_version))
+                if package_name in ignored_stdlibs:
+                    continue
+                else:
+                    package_version = stdlib_version_match.group(2)
+                    current_level[1].append((package_name.lower(), package_version))
             else:
                 current_level = None
                 _LOGGER.debug("Ignored Property Line: %s" % line)

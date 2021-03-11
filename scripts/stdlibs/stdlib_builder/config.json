@@ -1,0 +1,6 @@
+{
+  "nameOverrides": {
+    "jdbc": "java.jdbc"
+  },
+  "ignored": ["email"]
+}
