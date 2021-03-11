@@ -44,6 +44,10 @@ DEV_BALLERINA_DISTRIBUTION_REPO="${DEV_BALLERINA_REPOS_DIR}/ballerina-distributi
 export DEV_BALLERINA_DISTRIBUTION_REPO
 echo "Ballerina Distribution Repo: ${DEV_BALLERINA_DISTRIBUTION_REPO}"
 
+DEV_BALLERINA_STD_LIB_REPOS="${DEV_BALLERINA_REPOS_DIR}/std-libs"
+export DEV_BALLERINA_STD_LIB_REPOS
+echo "Ballerina Standard Library Repos: ${DEV_BALLERINA_STD_LIB_REPOS}"
+
 DEV_BALLERINA_VERSION=$(< "${DEV_BALLERINA_DISTRIBUTION_REPO}/gradle.properties" grep "^version=" | cut -d'=' -f2)
 export DEV_BALLERINA_VERSION
 echo "Ballerina Version: ${DEV_BALLERINA_VERSION}"

@@ -54,7 +54,7 @@ def clone_repo(repo: str, output_dir: str) -> bool:
             _LOGGER.debug("Cloned repository %s to directory %s" % (repo, output_dir))
             return True
         else:
-            raise Exception("Failed to clone repository " + repo)
+            raise Exception("Failed to clone repository " + repo + " to directory " + output_dir)
 
 
 def _execute_command(command: List[str]) -> int:

@@ -31,6 +31,20 @@ ballerina-pack.build.in-place-update:
 	bash quickUpdate.sh
 
 #
+# Ballerina Standard Libraries related targets
+#
+
+.PHONY: ballerina-stdlibs.clone
+ballerina-stdlibs.clone:
+	cd scripts/stdlibs; \
+	bash clone.sh
+
+.PHONY: ballerina-stdlibs.clone.with-cache
+ballerina-stdlibs.clone.with-cache:
+	cd scripts/stdlibs; \
+	USE_NO_CACHE="false" bash clone.sh
+
+#
 # Ballerina Projects related targets starts here
 #
 

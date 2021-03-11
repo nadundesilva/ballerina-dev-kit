@@ -46,8 +46,10 @@ def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str):
 
         # Reading the standard library name overrides
         with open(std_lib_name_overrides_file_path, "r", encoding="utf-8") as std_lib_name_overrides_file:
-            std_lib_name_overrides = {line_split[0]: line_split[1].strip() for line_split
-                                      in [line.split("=") for line in std_lib_name_overrides_file.readlines()]}
+            sanitized_lines = [line.strip() for line in std_lib_name_overrides_file.readlines()]
+            property_lines = [line for line in filter(lambda line: not line.startswith("#") and line, sanitized_lines)]
+            std_lib_name_overrides = {line_split[0]: line_split[1] for line_split
+                                      in [line.split("=") for line in property_lines]}
 
         # Generating the ordered list of standard library repos list
         repos_list = stdlibs.get_ordered_std_lib_repos(std_lib_name_overrides)
@@ -66,7 +68,7 @@ def clone_stdlibs(no_cache: bool, output_dir: str, name_overrides_file: str):
     if cloned_repo_count == 0:
         _LOGGER.info("All Standard Library Repositories already cloned to %s directory" % stdlibs_dir)
     else:
-        _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (len(repos_list), stdlibs_dir))
+        _LOGGER.info("Cloned %d Standard Library Repositories to %s directory" % (cloned_repo_count, stdlibs_dir))
 
 
 init_cli.add_command(clone_stdlibs)
