@@ -14,7 +14,7 @@
 import logging
 import os
 import subprocess
-from typing import List
+from typing import Tuple
 
 _LOGGER = logging.getLogger("utils")
 
@@ -26,7 +26,7 @@ def repo_exists(repo: str) -> bool:
     :param repo: The URL of the repository
     :returns: True if the repository exists
     """
-    return _execute_command(["git", "ls-remote", repo, "HEAD"]) == 0
+    return execute_command(("git", "ls-remote", repo, "HEAD"), stdout=subprocess.PIPE, stderr=subprocess.PIPE) == 0
 
 
 def clone_repo(repo: str, output_dir: str) -> bool:
@@ -40,7 +40,8 @@ def clone_repo(repo: str, output_dir: str) -> bool:
     """
     if os.path.exists(output_dir):
         if os.path.isdir(output_dir):
-            exit_code = _execute_command(["git", "rev-parse", "--git-dir"])
+            exit_code = execute_command(("git", "rev-parse", "--git-dir"), stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE)
             if exit_code == 0:
                 _LOGGER.debug("Ignoring already existing repository %s found in %s" % (repo, output_dir))
                 return False
@@ -49,7 +50,7 @@ def clone_repo(repo: str, output_dir: str) -> bool:
         else:
             raise Exception("Path %s already exists and not a directory" % output_dir)
     else:
-        exit_code = _execute_command(["git", "clone", repo, output_dir])
+        exit_code = execute_command(("git", "clone", repo, output_dir), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if exit_code == 0:
             _LOGGER.debug("Cloned repository %s to directory %s" % (repo, output_dir))
             return True
@@ -57,13 +58,14 @@ def clone_repo(repo: str, output_dir: str) -> bool:
             raise Exception("Failed to clone repository " + repo + " to directory " + output_dir)
 
 
-def _execute_command(command: List[str]) -> int:
+def execute_command(command: Tuple, **p_open_args) -> int:
     """
     Execute a command.
 
     :param command: The command to be executed
+    :param cwd: The current working directory in which the command should be executed
     :returns: The exit code of the command
     """
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(command, **p_open_args)
     process.wait()
     return process.returncode

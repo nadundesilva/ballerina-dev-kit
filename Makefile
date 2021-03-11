@@ -18,7 +18,7 @@ BALLERINA_PROJECT_RUN_DEBUG_TARGETS := $(addsuffix .run.debug, $(BALLERINA_PROJE
 .PHONY: ballerina-pack.build
 ballerina-pack.build:
 	cd scripts/ballerina-pack; \
-	bash build.sh
+	USE_BUILD_CACHE="false" bash build.sh
 
 .PHONY: ballerina-pack.build.with-cache
 ballerina-pack.build.with-cache:
@@ -37,12 +37,17 @@ ballerina-pack.build.in-place-update:
 .PHONY: ballerina-stdlibs.clone
 ballerina-stdlibs.clone:
 	cd scripts/stdlibs; \
-	bash clone.sh
+	USE_NO_CACHE="true" bash clone.sh
 
 .PHONY: ballerina-stdlibs.clone.with-cache
 ballerina-stdlibs.clone.with-cache:
 	cd scripts/stdlibs; \
 	USE_NO_CACHE="false" bash clone.sh
+
+.PHONY: ballerina-stdlibs.build
+ballerina-stdlibs.build:
+	cd scripts/stdlibs; \
+	USE_NO_CACHE="false" bash execute.sh -- sh gradlew clean build publishToMavenLocal --stacktrace -x test -x check
 
 #
 # Ballerina Projects related targets starts here

@@ -33,8 +33,7 @@ if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
 fi
 "./${DEV_BALLERINA_GRADLE_WRAPPER}" "${DEV_BALLERINA_LANG_BUILD_ARGS[@]}"
 echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
-DEV_BALLERINA_LANG_PUBLISH_ARGS=(publishToMavenLocal --stacktrace -x test -x check \
-  -x publishCodeCovPublicationToMavenLocal)
+DEV_BALLERINA_LANG_PUBLISH_ARGS=(publishToMavenLocal --stacktrace -x test -x check)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_LANG_PUBLISH_ARGS+=(--no-build-cache)
 fi
