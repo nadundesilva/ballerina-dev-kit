@@ -35,6 +35,15 @@ if [[ -n "${CLEANUP_EXTRA_MODULES}" ]]; then
   fi
 fi
 python3 main.py "${CLONE_ARGS[@]}"
+popd
 
-python3 main.py execute "${EXECUTE_ARGS[@]}" --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" -- git remote rename origin upstream
+pushd "${DEV_BALLERINA_STD_LIB_REPOS}"
+for STDLIB_DIR in ./*/
+do
+  pushd "${STDLIB_DIR}" > /dev/null 2>&1
+  if ! git ls-remote --exit-code origin > /dev/null 2>&1 && git ls-remote --exit-code upstream > /dev/null 2>&1; then
+    git remote rename origin upstream || true
+  fi
+  popd > /dev/null 2>&1
+done
 popd
