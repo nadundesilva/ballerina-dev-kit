@@ -31,7 +31,7 @@ service /chainedBallerinaService on new http:Listener(10012) {
     resource function get firstResourceCall(http:Caller caller, http:Request request) {
         http:Client clientEndpoint = checkpanic new ("http://localhost:10011");
 
-        var response = clientEndpoint->get("/simplePassThrough/passThroughToPostman");
+        var response = clientEndpoint->get("/simplePassThrough/passThroughToPostman", targetType = http:Response);
         handleResponseFromBackend(response);
 
         // Send a response back to the caller.
