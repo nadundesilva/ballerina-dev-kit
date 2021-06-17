@@ -74,14 +74,15 @@ def clone_stdlibs(config_path: str, no_cache: bool, stdlibs_dir: str, cleanup: b
 @click.option("--config-path", type=str, default="config.json")
 @click.option("--no-cache", type=bool, default=False)
 @click.option("--stdlibs-dir", type=str, default="stdlibs")
-def execute_command(config_path: str, command: Tuple[str], no_cache: bool, stdlibs_dir: str):
+@click.option("--inherit-exit-code", type=bool, default=True)
+def execute_command(config_path: str, command: Tuple[str], no_cache: bool, stdlibs_dir: str, inherit_exit_code: bool):
     config = utils.read_config(config_path)
     repos_list = _build_stdlibs_order(no_cache, config)
     stdlibs_dir = os.path.abspath(stdlibs_dir)
     for repo in repos_list:
         working_dir = os.path.join(stdlibs_dir, repo["name"])
         exit_code = utils.execute_command(command, cwd=working_dir)
-        if exit_code != 0:
+        if inherit_exit_code and exit_code != 0:
             _LOGGER.error("Failed to execute command %s for standard library %s" % (str(command), repo["name"]))
             exit(exit_code)
 

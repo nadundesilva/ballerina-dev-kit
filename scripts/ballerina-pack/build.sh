@@ -27,7 +27,7 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
-DEV_BALLERINA_LANG_BUILD_ARGS=(clean build --stacktrace -x test -x check -x :jballerina-tools:generateDocs)
+DEV_BALLERINA_LANG_BUILD_ARGS=(clean build --stacktrace -x test -x check)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_LANG_BUILD_ARGS+=(--no-build-cache)
 fi
@@ -45,7 +45,7 @@ pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Distribution)"
 DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS=(clean build --stacktrace
-    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
+    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test -x :central-tests:test \
     -x :devtools-integration-tests:test)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS+=(--no-build-cache)
