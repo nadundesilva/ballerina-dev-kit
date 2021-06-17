@@ -11,6 +11,11 @@ BALLERINA_PROJECT_BUILD_DEBUG_TARGETS := $(addsuffix .build.debug, $(BALLERINA_P
 BALLERINA_PROJECT_RUN_TARGETS := $(addsuffix .run, $(BALLERINA_PROJECT_MODULE_TARGETS))
 BALLERINA_PROJECT_RUN_DEBUG_TARGETS := $(addsuffix .run.debug, $(BALLERINA_PROJECT_MODULE_TARGETS))
 
+.PHONY: init-dev-kit
+init-dev-kit:
+	cd scripts; \
+	bash init-dev-kit.sh
+
 #
 # Ballerina Pack related targets starts here
 #

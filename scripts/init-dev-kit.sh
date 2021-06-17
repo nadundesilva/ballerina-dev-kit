@@ -15,16 +15,9 @@
 
 set -e
 
-function readAbsolutePath() {
-  readlink -f "$1"
-}
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-function installDependencies() {
-  sudo apt update --yes
-  sudo apt upgrade --yes
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
-  # Install miniconda
-  wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-  bash ~/miniconda.sh -b -p ~/miniconda
-  rm ~/miniconda.sh
-}
+installDependencies
