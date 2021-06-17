@@ -77,8 +77,8 @@ export DEV_BALLERINA_GRADLE_WRAPPER
 echo "Gradle Wrapper Name: ${DEV_BALLERINA_GRADLE_WRAPPER}"
 
 DEV_CONDA_ENVIRONMENT_NAME="ballerina-dev-kit"
-export CONDA_ENVIRONMENT_NAME
-echo "Conda Environment Name: ${CONDA_ENVIRONMENT_NAME}"
+export DEV_CONDA_ENVIRONMENT_NAME
+echo "Conda Environment Name: ${DEV_CONDA_ENVIRONMENT_NAME}"
 
 echo
 

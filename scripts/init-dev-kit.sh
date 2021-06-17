@@ -15,7 +15,7 @@
 
 set -e
 
-DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
+DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"

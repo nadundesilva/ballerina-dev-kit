@@ -21,10 +21,8 @@ DEV_BALLERINA_PROJECT_NAME="$1"
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../properties.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
-# shellcheck source=../utils.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
 DEV_BALLERINA_PROJECT_PATH="${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}"
 
