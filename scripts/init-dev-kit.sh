@@ -28,8 +28,10 @@ if [[ ! "${CI}" == "true" ]]; then
   conda create --force --yes --name "${DEV_CONDA_ENVIRONMENT_NAME}"
   if [[ "${SHELL}" == *"/bash" ]]; then
     conda init bash
+    eval "$(conda shell.bash hook)"
   elif [[ "${SHELL}" == *"/zsh" ]]; then
     conda init zsh
+    eval "$(conda shell.zsh hook)"
   else
     echo "Unsupported Shell: ${SHELL}"
     exit 1

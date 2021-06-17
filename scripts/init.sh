@@ -23,5 +23,14 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 if [[ ! "${CI}" == "true" ]]; then
+  if [[ "${SHELL}" == *"/bash" ]]; then
+    eval "$(conda shell.bash hook)"
+  elif [[ "${SHELL}" == *"/zsh" ]]; then
+    eval "$(conda shell.zsh hook)"
+  else
+    echo "Unsupported Shell: ${SHELL}"
+    exit 1
+  fi
   conda activate "${DEV_CONDA_ENVIRONMENT_NAME}"
+  echo "Changed conda environment to ${CONDA_DEFAULT_ENV}"
 fi

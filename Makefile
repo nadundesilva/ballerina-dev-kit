@@ -14,7 +14,7 @@ BALLERINA_PROJECT_RUN_DEBUG_TARGETS := $(addsuffix .run.debug, $(BALLERINA_PROJE
 .PHONY: init-dev-kit
 init-dev-kit:
 	cd scripts; \
-	bash init-dev-kit.sh
+	bash -i init-dev-kit.sh
 
 #
 # Ballerina Pack related targets starts here
@@ -23,17 +23,17 @@ init-dev-kit:
 .PHONY: ballerina-pack.build
 ballerina-pack.build:
 	cd scripts/ballerina-pack; \
-	USE_BUILD_CACHE="false" bash build.sh
+	USE_BUILD_CACHE="false" bash -i build.sh
 
 .PHONY: ballerina-pack.build.with-cache
 ballerina-pack.build.with-cache:
 	cd scripts/ballerina-pack; \
-	USE_BUILD_CACHE="true" bash build.sh
+	USE_BUILD_CACHE="true" bash -i build.sh
 
 .PHONY: ballerina-pack.build.in-place-update
 ballerina-pack.build.in-place-update:
 	cd scripts/ballerina-pack; \
-	bash quickUpdate.sh
+	bash -i quickUpdate.sh
 
 #
 # Ballerina Standard Libraries related targets
@@ -42,17 +42,17 @@ ballerina-pack.build.in-place-update:
 .PHONY: ballerina-stdlibs.clone
 ballerina-stdlibs.clone:
 	cd scripts/stdlibs; \
-	USE_NO_CACHE="true" bash clone.sh
+	USE_NO_CACHE="true" bash -i clone.sh
 
 .PHONY: ballerina-stdlibs.clone.with-cache
 ballerina-stdlibs.clone.with-cache:
 	cd scripts/stdlibs; \
-	USE_NO_CACHE="false" bash clone.sh
+	USE_NO_CACHE="false" bash -i clone.sh
 
 .PHONY: ballerina-stdlibs.build
 ballerina-stdlibs.build:
 	cd scripts/stdlibs; \
-	USE_NO_CACHE="false" bash execute.sh -- sh gradlew clean build publishToMavenLocal --stacktrace -x test -x check
+	USE_NO_CACHE="false" bash -i execute.sh -- sh gradlew clean build publishToMavenLocal --stacktrace -x test -x check
 
 #
 # Ballerina Projects related targets starts here
@@ -63,7 +63,7 @@ ballerina-stdlibs.build:
 $(BALLERINA_PROJECT_BUILD_TARGETS):
 	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.build,%,$@)))
 	cd scripts/ballerina-project; \
-	bash build.sh $(BALLERINA_PROJECT)
+	bash -i build.sh $(BALLERINA_PROJECT)
 
 # Targets: ballerina-project.<project-name>.<module-name>.build.debug
 .PHONY: $(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS)
@@ -71,21 +71,21 @@ $(BALLERINA_PROJECT_BUILD_DEBUG_TARGETS):
 	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.build.debug,%,$@)))
 	cd scripts/ballerina-project; \
 	export BAL_JAVA_DEBUG=${REMOTE_DEBUG_PORT}; \
-	bash build.sh $(BALLERINA_PROJECT) --skip-tests
+	bash -i build.sh $(BALLERINA_PROJECT) --skip-tests
 
 # Targets: ballerina-project.<project-name>.<module-name>.run
 .PHONY: $(BALLERINA_PROJECT_RUN_TARGETS)
 $(BALLERINA_PROJECT_RUN_TARGETS):
 	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.run,%,$@)))
 	cd scripts/ballerina-project; \
-	bash run.sh $(BALLERINA_PROJECT)
+	bash -i run.sh $(BALLERINA_PROJECT)
 
 # Targets: ballerina-project.<project-name>.<module-name>.run.debug
 .PHONY: $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS)
 $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS):
 	$(eval BALLERINA_PROJECT=$(subst ., ,$(patsubst ballerina-project.%.run.debug,%,$@)))
 	cd scripts/ballerina-project; \
-	bash run.sh $(BALLERINA_PROJECT) -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
+	bash -i run.sh $(BALLERINA_PROJECT) -Xdebug -Xrunjdwp:transport=dt_socket,address=${REMOTE_DEBUG_PORT},server=y
 
 #
 # Miscelaneous targets starts here
@@ -94,14 +94,14 @@ $(BALLERINA_PROJECT_RUN_DEBUG_TARGETS):
 .PHONY: misc.jaeger.start
 misc.jaeger.start:
 	cd scripts/misc; \
-	bash start-jaeger.sh
+	bash -i start-jaeger.sh
 
 .PHONY: misc.prometheus.start
 misc.prometheus.start:
 	cd scripts/misc; \
-	bash start-prometheus.sh
+	bash -i start-prometheus.sh
 
 .PHONY: misc.grafana.start
 misc.grafana.start:
 	cd scripts/misc; \
-	bash start-grafana.sh
+	bash -i start-grafana.sh
