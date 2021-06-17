@@ -22,13 +22,6 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
-conda create --force --yes --name "${DEV_CONDA_ENVIRONMENT_NAME}"
-if [[ "${SHELL}" == *"/bash" ]]; then
-  conda init bash
-elif [[ "${SHELL}" == *"/zsh" ]]; then
-  conda init zsh
-else
-  echo "Unsupported Shell: ${SHELL}"
-  exit 1
+if [[ ! "${CI}" == "true" ]]; then
+  conda activate "${DEV_CONDA_ENVIRONMENT_NAME}"
 fi
-conda activate "${DEV_CONDA_ENVIRONMENT_NAME}"

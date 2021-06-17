@@ -66,3 +66,7 @@ bash "${DEV_BALLERINA_SCRIPTS_DIR}/ballerina-pack/unzipPack.sh"
 
 echo "Building Ballerina Pack Complete"
 printBallerinaPackInfo
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"
+

@@ -45,3 +45,6 @@ do
   popd > /dev/null 2>&1
 done
 popd
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

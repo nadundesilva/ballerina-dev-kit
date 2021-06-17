@@ -35,3 +35,6 @@ popd || exit 1
 
 echo "Updating Ballerina Pack Complete"
 printBallerinaPackInfo
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

@@ -55,3 +55,6 @@ if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
   echo
   cat "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
 fi
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

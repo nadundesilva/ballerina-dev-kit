@@ -15,4 +15,6 @@
 
 set -e
 
-conda deactivate
+if [[ ! "${CI}" == "true" ]]; then
+  conda deactivate
+fi

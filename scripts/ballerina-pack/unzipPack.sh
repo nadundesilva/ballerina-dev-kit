@@ -48,3 +48,6 @@ if [ -f "${AZURE_FUNCTIONS_PLUGIN_JAR}" ]; then
   echo "Removing Azure Functions Plugin ${AZURE_FUNCTIONS_PLUGIN_JAR}"
   rm "${AZURE_FUNCTIONS_PLUGIN_JAR}"
 fi
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

@@ -27,3 +27,6 @@ pushd stdlib_builder
 python3 main.py execute --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}" \
   --inherit-exit-code="${INHERIT_EXIT_CODE}" "${@}"
 popd
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

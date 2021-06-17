@@ -17,7 +17,23 @@ set -e
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../init.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
+# shellcheck source=../properties.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
+# shellcheck source=../utils.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
 installDependencies
+
+if [[ ! "${CI}" == "true" ]]; then
+  conda create --force --yes --name "${DEV_CONDA_ENVIRONMENT_NAME}"
+  if [[ "${SHELL}" == *"/bash" ]]; then
+    conda init bash
+  elif [[ "${SHELL}" == *"/zsh" ]]; then
+    conda init zsh
+  else
+    echo "Unsupported Shell: ${SHELL}"
+    exit 1
+  fi
+
+  echo "Please restart shell for the changes to take effect"
+fi
