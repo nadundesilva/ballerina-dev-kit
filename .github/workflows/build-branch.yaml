@@ -44,6 +44,7 @@ jobs:
         packageUser: ${{ github.actor }}
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        make ballerina-pack.build
         make ballerina-pack.build.with-cache
     - name: Upload Pack
       uses: actions/upload-artifact@v2
@@ -80,7 +81,7 @@ jobs:
         path: packs/ballerina-*.zip
   build_ballerina_pack_in_place_update:
     name: Build Ballerina Pack in-place Update
-    needs: build_ballerina_pack_with_build_cache
+    needs: build_ballerina_pack
     strategy:
       matrix:
         os: ["ubuntu-20.04", "macos-10.15"]
