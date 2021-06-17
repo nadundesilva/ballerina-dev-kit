@@ -15,7 +15,7 @@
 
 set -e
 
-JAEGER_IMAGE="jaegertracing/all-in-one:1.18"
+JAEGER_IMAGE="jaegertracing/opentelemetry-all-in-one:latest"
 JAEGER_CONTAINER_NAME="ballerina-dev-kit-jaeger"
 JAEGER_PORTAL_PORT=16686
 
@@ -41,6 +41,7 @@ docker run -it --name ${JAEGER_CONTAINER_NAME} \
   -p 5775:5775/udp \
   -p 6831:6831/udp \
   -p 6832:6832/udp \
+  -p 55680:55680 \
   -p 5778:5778 \
   -p ${JAEGER_PORTAL_PORT}:16686 \
   -p 14268:14268 \
