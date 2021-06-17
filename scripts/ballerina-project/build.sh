@@ -45,6 +45,8 @@ fi
 
 echo "Building Ballerina Project ${DEV_BALLERINA_PROJECT_PATH}"
 echo
+rm -rf "${DEV_BALLERINA_PROJECT_PATH}/target"
+rm -f "${DEV_BALLERINA_PROJECT_PATH}/Dependencies.toml"
 "${DEV_BALLERINA_EXECUTABLE}" build "${@:$((DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT + 1))}" "${DEV_BALLERINA_PROJECT_PATH}"
 echo
 
