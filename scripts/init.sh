@@ -22,6 +22,13 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
+echo
+echo "============================"
+echo " Java Information "
+echo "============================"
+java -version
+echo
+
 if [[ ! "${CI}" == "true" ]]; then
   if [[ "${SHELL}" == *"/bash" ]]; then
     eval "$(conda shell.bash hook)"
