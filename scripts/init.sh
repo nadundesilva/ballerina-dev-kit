@@ -27,6 +27,7 @@ echo "============================"
 echo " Java Information "
 echo "============================"
 java -version
+echo "Java Home: ${JAVA_HOME}"
 echo
 
 if [[ ! "${CI}" == "true" ]]; then
