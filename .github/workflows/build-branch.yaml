@@ -29,6 +29,12 @@ jobs:
         packageUser: ${{ github.actor }}
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        make ballerina-pack.build
+    - name: Build Pack With Cache
+      env:
+        packageUser: ${{ github.actor }}
+        packagePAT: ${{ secrets.GITHUB_TOKEN }}
+      run: |
         make ballerina-pack.build.with-cache
     - name: Upload Pack
       uses: actions/upload-artifact@v2
