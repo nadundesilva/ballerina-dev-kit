@@ -1,11 +1,8 @@
 name: Build Branch
 
 on:
-  pull_request:
-  workflow_dispatch:
-  push:
-    branches:
-    - main
+- push
+- pull_request
 
 jobs:
   build_ballerina_pack_with_build_cache:
@@ -43,6 +40,7 @@ jobs:
         name: Ballerina Pack (${{ matrix.os }} - With Build Cache)
         if-no-files-found: error
         path: packs/ballerina-*.zip
+
   build_ballerina_pack:
     name: Build Ballerina Pack
     strategy:
@@ -71,6 +69,7 @@ jobs:
         name: Ballerina Pack (${{ matrix.os }} - No Build Cache)
         if-no-files-found: error
         path: packs/ballerina-*.zip
+
   build_ballerina_pack_in_place_update:
     name: Build Ballerina Pack in-place Update
     needs: build_ballerina_pack
@@ -107,6 +106,7 @@ jobs:
         name: Ballerina Pack (${{ matrix.os }} - In-place Update)
         if-no-files-found: error
         path: packs/ballerina-*.zip
+
   test_projects:
     name: Test Build Projects
     needs:
