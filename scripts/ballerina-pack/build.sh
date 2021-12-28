@@ -25,17 +25,11 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
-DEV_BALLERINA_LANG_BUILD_ARGS=(clean build --stacktrace -x test -x check)
+DEV_BALLERINA_LANG_BUILD_ARGS=(clean build publishToMavenLocal --stacktrace -x test -x check)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_LANG_BUILD_ARGS+=(--no-build-cache)
 fi
 "./${DEV_BALLERINA_GRADLE_WRAPPER}" "${DEV_BALLERINA_LANG_BUILD_ARGS[@]}"
-echo "Running Gradle Publish to Maven Local (Ballerina Lang)"
-DEV_BALLERINA_LANG_PUBLISH_ARGS=(publishToMavenLocal --stacktrace -x test -x check)
-if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
-  DEV_BALLERINA_LANG_PUBLISH_ARGS+=(--no-build-cache)
-fi
-"./${DEV_BALLERINA_GRADLE_WRAPPER}" "${DEV_BALLERINA_LANG_PUBLISH_ARGS[@]}"
 echo
 popd || exit 1
 
@@ -43,7 +37,7 @@ pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Distribution)"
 DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS=(clean build --stacktrace
-    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test -x :central-tests:test \
+    -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
     -x :devtools-integration-tests:test)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS+=(--no-build-cache)
