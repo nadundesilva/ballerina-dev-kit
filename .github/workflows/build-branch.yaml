@@ -12,7 +12,7 @@ jobs:
     name: Build Ballerina Pack with Cache
     strategy:
       matrix:
-        os: ["ubuntu-20.04", "macos-10.15"]
+        os: ["ubuntu-20.04", "macos-11"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
@@ -29,6 +29,7 @@ jobs:
         packageUser: ${{ github.actor }}
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        echo ${JAVA_HOME}
         make ballerina-pack.build
     - name: Build Pack With Cache
       env:
@@ -46,7 +47,7 @@ jobs:
     name: Build Ballerina Pack
     strategy:
       matrix:
-        os: ["ubuntu-20.04", "macos-10.15"]
+        os: ["ubuntu-20.04", "macos-11"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
@@ -75,7 +76,7 @@ jobs:
     needs: build_ballerina_pack
     strategy:
       matrix:
-        os: ["ubuntu-20.04", "macos-10.15"]
+        os: ["ubuntu-20.04", "macos-11"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
@@ -115,7 +116,7 @@ jobs:
     strategy:
       matrix:
         pack: ["With Build Cache", "No Build Cache", "In-place Update"]
-        os: ["ubuntu-20.04", "macos-10.15"]
+        os: ["ubuntu-20.04", "macos-11"]
         project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
     runs-on: ${{ matrix.os }}
     steps:

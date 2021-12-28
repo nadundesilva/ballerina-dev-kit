@@ -15,6 +15,8 @@
 
 set -e
 
+git submodule update --init
+
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # shellcheck source=../properties.sh
