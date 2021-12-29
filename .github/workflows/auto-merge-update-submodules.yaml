@@ -1,0 +1,18 @@
+name: Auto Merge Auto Update Submodules Pull Request
+
+on:
+  check_suite:
+    types:
+    - completed
+
+jobs:
+  auto_merge:
+    name: Auto Merge Auto Update Submodules Pull Request
+    if: ${{ check_suite.head_branch == 'automated/submodule-update' && check_suite.conclusion == 'success' }}
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Merge Pull Request
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+      run: |
+        echo "Merging PR"

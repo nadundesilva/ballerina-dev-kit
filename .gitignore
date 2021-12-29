@@ -6,3 +6,6 @@ __pycache__
 
 # Dev Kit Files
 .choreoproject
+
+# OS
+.DS_Store
