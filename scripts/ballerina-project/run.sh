@@ -21,10 +21,8 @@ DEV_BALLERINA_PROJECT_NAME="$1"
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../properties.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
-# shellcheck source=../utils.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
 pushd "${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}" || exit 1
 
@@ -55,3 +53,6 @@ if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
 fi
 
 popd || exit 1
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

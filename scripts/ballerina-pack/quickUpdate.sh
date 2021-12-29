@@ -17,10 +17,8 @@ set -e
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../properties.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
-# shellcheck source=../utils.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
 if [ ! -d "${DEV_BALLERINA_PACK}" ]; then
   echo "Unable to update: Ballerina Pack ${DEV_BALLERINA_PACK} not found"
@@ -37,3 +35,6 @@ popd || exit 1
 
 echo "Updating Ballerina Pack Complete"
 printBallerinaPackInfo
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"
