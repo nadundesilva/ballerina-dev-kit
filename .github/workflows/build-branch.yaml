@@ -70,54 +70,62 @@ jobs:
         if-no-files-found: error
         path: packs/ballerina-*.zip
 
-  build_ballerina_pack_in_place_update:
-    name: Build Ballerina Pack in-place Update
-    needs: build_ballerina_pack
-    strategy:
-      matrix:
-        os: ["ubuntu-20.04", "macos-11"]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Cloning repository
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        distribution: adopt
-        java-version: 11
-    - name: Download Pack
-      uses: actions/download-artifact@v2
-      with:
-        name: Ballerina Pack (${{ matrix.os }} - No Build Cache)
-        path: packs
-    - name: Unzip Pack
-      run: bash scripts/ballerina-pack/unzipPack.sh
-    - name: In-place Update
-      env:
-        packageUser: ${{ github.actor }}
-        packagePAT: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        make ballerina-pack.build.in-place-update
-    - name: Upload Pack
-      uses: actions/upload-artifact@v2
-      with:
-        name: Ballerina Pack (${{ matrix.os }} - In-place Update)
-        if-no-files-found: error
-        path: packs/ballerina-*.zip
+#  build_ballerina_pack_in_place_update:
+#    name: Build Ballerina Pack in-place Update
+#    needs: build_ballerina_pack
+#    strategy:
+#      matrix:
+#        os: ["ubuntu-20.04", "macos-11"]
+#    runs-on: ${{ matrix.os }}
+#    steps:
+#    - name: Cloning repository
+#      uses: actions/checkout@v2
+#      with:
+#        submodules: recursive
+#    - name: Set up JDK 11
+#      uses: actions/setup-java@v2
+#      with:
+#        distribution: adopt
+#        java-version: 11
+#    - name: Download Pack
+#      uses: actions/download-artifact@v2
+#      with:
+#        name: Ballerina Pack (${{ matrix.os }} - No Build Cache)
+#        path: packs
+#    - name: Unzip Pack
+#      run: bash scripts/ballerina-pack/unzipPack.sh
+#    - name: In-place Update
+#      env:
+#        packageUser: ${{ github.actor }}
+#        packagePAT: ${{ secrets.GITHUB_TOKEN }}
+#      run: |
+#        make ballerina-pack.build.in-place-update
+#    - name: Upload Pack
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Ballerina Pack (${{ matrix.os }} - In-place Update)
+#        if-no-files-found: error
+#        path: packs/ballerina-*.zip
 
   test_projects:
     name: Test Build Projects
     needs:
     - build_ballerina_pack_with_build_cache
     - build_ballerina_pack
-    - build_ballerina_pack_in_place_update
+#    - build_ballerina_pack_in_place_update
     strategy:
       matrix:
-        pack: ["With Build Cache", "No Build Cache", "In-place Update"]
-        os: ["ubuntu-20.04", "macos-11"]
-        project: ["hello_world_service", "simple_passthrough", "chained_ballerina_service"]
+        pack:
+        - "With Build Cache"
+        - "No Build Cache"
+#        - "In-place Update"
+        os:
+        - "ubuntu-20.04"
+        - "macos-11"
+        project:
+        - "hello_world_service"
+        - "simple_passthrough"
+        - "chained_ballerina_service"
     runs-on: ${{ matrix.os }}
     steps:
     - name: Cloning repository
