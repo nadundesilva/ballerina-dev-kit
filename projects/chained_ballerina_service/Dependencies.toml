@@ -1,0 +1,21 @@
+[[dependency]]
+org = "ballerinax"
+name = "jaeger"
+version = "0.2.3"
+
+[[dependency]]
+org = "ballerinax"
+name = "prometheus"
+version = "0.1.8"
+
+[[dependency]]
+org = "ballerina"
+name = "observe"
+version = "0.9.0"
+
+[[dependency]]
+org = "ballerinax"
+name = "choreo"
+version = "0.3.0"
+
+

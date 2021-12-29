@@ -20,12 +20,13 @@ INHERIT_EXIT_CODE=${INHERIT_EXIT_CODE:-"true"}
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../properties.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
-# shellcheck source=../utils.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
 pushd stdlib_builder
 python3 main.py execute --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}" \
   --inherit-exit-code="${INHERIT_EXIT_CODE}" "${@}"
 popd
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

@@ -21,10 +21,8 @@ DEV_BALLERINA_PROJECT_NAME="$1"
 
 DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-# shellcheck source=../properties.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
-# shellcheck source=../utils.sh
-source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
 DEV_BALLERINA_PROJECT_PATH="${DEV_BALLERINA_ROOT_DIR}/projects/${DEV_BALLERINA_PROJECT_NAME}"
 
@@ -47,6 +45,8 @@ fi
 
 echo "Building Ballerina Project ${DEV_BALLERINA_PROJECT_PATH}"
 echo
+rm -rf "${DEV_BALLERINA_PROJECT_PATH}/target"
+rm -f "${DEV_BALLERINA_PROJECT_PATH}/Dependencies.toml"
 "${DEV_BALLERINA_EXECUTABLE}" build "${@:$((DEV_BALLERINA_CURRENT_SCRIPT_MAIN_PARAMS_COUNT + 1))}" "${DEV_BALLERINA_PROJECT_PATH}"
 echo
 
@@ -57,3 +57,6 @@ if [ -f "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}" ]; then
   echo
   cat "${DEV_BALLERINA_PROJECT_INTERNAL_LOG_FILE}"
 fi
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

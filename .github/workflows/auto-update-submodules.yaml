@@ -1,0 +1,97 @@
+name: Auto Update Submodules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * SUN"
+
+jobs:
+  test-updated-submodules:
+    name: Test Updated Submodules
+    env:
+      BOT_TOKEN_EXISTS: ${{ secrets.BOT_TOKEN != '' }}
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Cloning repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Set up JDK 11
+      id: setup-jdk
+      uses: actions/setup-java@v2
+      with:
+        distribution: adopt
+        java-version: 11
+    - name: Update Submodules
+      id: update-submodules
+      run: |
+        echo "Checking out the proper branch for the submodule update"
+        git checkout -b automated/submodule-update
+        echo
+        git submodule sync --recursive
+        git submodule update --recursive --remote
+
+        export UNCOMMITTED_CHANGES=$(git diff-index HEAD -- repos/)
+        if [[ -z "${UNCOMMITTED_CHANGES}" ]];
+        then
+          echo "::set-output name=updates-available::false"
+          echo "No submodule updates available"
+        else
+          echo "::set-output name=updates-available::true"
+          echo "Submodule updates available"
+        fi
+    - name: Commit new Submodule Versions
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      run: |
+        echo "Configuring Git CLI"
+        git config user.name "Nadun De Silva"
+        git config user.email "nadunrds@gmail.com"
+        git config github.user "${GITHUB_USER}"
+
+        echo "Adding the new submodule version commit"
+        git add ./repos
+        git commit -m "[Automated] Update submodules to the latest versions" -m "# Created by GitHub Action"
+    - name: Test Build
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      env:
+        packageUser: ${{ github.actor }}
+        packagePAT: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        make ballerina-pack.build
+    - name: Unzip Pack
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      run: bash scripts/ballerina-pack/unzipPack.sh
+    - name: Test Hello World Project
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      env:
+        packageUser: ${{ github.actor }}
+        packagePAT: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        make ballerina-project.hello_world_service.build
+    - name: Push new Submodule Versions
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        GITHUB_USER: ${{ github.actor }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: |
+        echo "Updating remote branch with the new submodule versions"
+        git push -u https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git automated/submodule-update -f
+    - name: Create Pull Request
+      if: ${{ steps.update-submodules.outputs.updates-available == 'true' && env.BOT_TOKEN_EXISTS == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+      run: |
+        echo "Checking whether an already open PR exists"
+        OPEN_PR_COUNT=$(gh pr list --label "Type/SubmodulesUpdate" --base main \
+          --limit 1 --state "open" --json "state" --template "{{ len . }}")
+        echo
+        if [ "${OPEN_PR_COUNT}" == "0" ]; then
+          echo "Opening PR as no already open PR was found"
+          gh pr create --label "Type/SubmodulesUpdate" --base main \
+            --assignee "@me" --head automated/submodule-update \
+            --title "[Automated] Update Submodules to the latest version" \
+            --body "Update Submodules to the latest version"
+        else
+          echo "Already open PR Exists"
+        fi

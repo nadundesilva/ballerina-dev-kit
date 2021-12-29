@@ -15,11 +15,6 @@
 
 set -e
 
-function readAbsolutePath() {
-  echo "$(dirname $1)/$(basename $1)"
-}
-
-function installDependencies() {
-  brew update
-  brew install miniconda
-}
+if [[ ! "${CI}" == "true" ]]; then
+  conda deactivate
+fi

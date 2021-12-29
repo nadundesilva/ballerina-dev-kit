@@ -31,7 +31,7 @@ service /simplePassThrough on new http:Listener(10011) {
 	    http:Client clientEndpoint = checkpanic new("http://postman-echo.com");
 
         io:println("Sending GET Request to Postman Echo");
-        var response = clientEndpoint->get("/get?test=123");
+        var response = clientEndpoint->get("/get?test=123", targetType = http:Response);
         if (response is http:Response) {
             var msg = response.getJsonPayload();
             if (msg is json) {
@@ -44,7 +44,7 @@ service /simplePassThrough on new http:Listener(10011) {
         }
 
         io:println("Sending POST Request to Postman Echo");
-        response = clientEndpoint->post("/post", "POST: Hello World");
+        response = clientEndpoint->post("/post", "POST: Hello World", targetType = http:Response);
         if (response is http:Response) {
             var msg = response.getJsonPayload();
             if (msg is json) {

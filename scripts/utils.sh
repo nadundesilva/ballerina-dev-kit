@@ -35,7 +35,7 @@ function printBallerinaPackInfo() {
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   # shellcheck source=./utils-linux.sh
   source "${DEV_BALLERINA_SCRIPTS_DIR}/utils-linux.sh"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+elif [[ "${OSTYPE}" == "darwin"* ]]; then
   # shellcheck source=./utils-linux.sh
   source "${DEV_BALLERINA_SCRIPTS_DIR}/utils-macos.sh"
 else
