@@ -25,7 +25,7 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"
-DEV_BALLERINA_LANG_BUILD_ARGS=(clean build publishToMavenLocal --stacktrace --info --console=plain -x test -x check)
+DEV_BALLERINA_LANG_BUILD_ARGS=(clean build publishToMavenLocal --stacktrace --info --scan --console=plain -x test -x check)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
   DEV_BALLERINA_LANG_BUILD_ARGS+=(--no-build-cache)
 fi
@@ -33,10 +33,15 @@ fi
 echo
 popd || exit 1
 
+if [[ "${SKIP_STDLIBS_BUILD}" == "false" ]]; then
+  # shellcheck source=../stdlibs/execute.sh
+  source "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/execute.sh" -- bash "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/build-repo.sh"
+fi
+
 pushd "${DEV_BALLERINA_DISTRIBUTION_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Distribution)"
-DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS=(clean build --stacktrace --info --console=plain
+DEV_BALLERINA_DISTRIBUTION_BUILD_ARGS=(clean build publishToMavenLocal --stacktrace --info --scan --console=plain
     -x testExamples -x testStdlibs -x testDevTools -x :ballerina-distribution-test:test \
     -x :devtools-integration-tests:test)
 if [[ "${USE_BUILD_CACHE}" == "false" ]]; then
@@ -55,8 +60,8 @@ fi
 echo "Copying new Ballerina Pack zip to ${DEV_BALLERINA_PACK_ZIP}"
 cp  "${DEV_BALLERINA_DISTRIBUTION_REPO}/ballerina/build/distributions/${DEV_BALLERINA_PACK_NAME}.zip" "${DEV_BALLERINA_PACK_ZIP}"
 
-# shellcheck source=./unzipPack.sh
-bash "${DEV_BALLERINA_SCRIPTS_DIR}/ballerina-pack/unzipPack.sh"
+# shellcheck source=./unzip-pack.sh
+bash "${DEV_BALLERINA_SCRIPTS_DIR}/ballerina-pack/unzip-pack.sh"
 
 echo "Building Ballerina Pack Complete"
 printBallerinaPackInfo

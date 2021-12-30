@@ -23,19 +23,28 @@ init-dev-kit:
 .PHONY: ballerina-pack.build
 ballerina-pack.build:
 	cd scripts/ballerina-pack; \
+	export SKIP_STDLIBS_BUILD="true"; \
+	export USE_BUILD_CACHE="false"; \
+	./build.sh
+
+.PHONY: ballerina-pack.build.with-stdlibs
+ballerina-pack.build.with-stdlibs:
+	cd scripts/ballerina-pack; \
+	export SKIP_STDLIBS_BUILD="false"; \
 	export USE_BUILD_CACHE="false"; \
 	./build.sh
 
 .PHONY: ballerina-pack.build.with-cache
 ballerina-pack.build.with-cache:
 	cd scripts/ballerina-pack; \
+	export SKIP_STDLIBS_BUILD="true"; \
 	export USE_BUILD_CACHE="true"; \
 	./build.sh
 
 .PHONY: ballerina-pack.build.in-place-update
 ballerina-pack.build.in-place-update:
 	cd scripts/ballerina-pack; \
-	./quickUpdate.sh
+	./quick-update.sh
 
 #
 # Ballerina Standard Libraries related targets
@@ -57,7 +66,7 @@ ballerina-stdlibs.clone.with-cache:
 ballerina-stdlibs.build:
 	cd scripts/stdlibs; \
 	export USE_NO_CACHE="false"; \
-	./execute.sh -- sh gradlew clean build publishToMavenLocal --stacktrace -x test -x check
+	./execute.sh -- bash $(realpath ./build-repo.sh)
 
 #
 # Ballerina Projects related targets starts here

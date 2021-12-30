@@ -22,7 +22,7 @@ DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/nul
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
-pushd stdlib_builder
+pushd "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/stdlib_builder" || exit 1
 CLONE_ARGS=(clone --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}")
 if [[ -n "${CLEANUP_EXTRA_MODULES}" ]]; then
   if [[ "${CLEANUP_EXTRA_MODULES}" == "true" || "${CLEANUP_EXTRA_MODULES}" == "false" ]]; then
@@ -33,18 +33,18 @@ if [[ -n "${CLEANUP_EXTRA_MODULES}" ]]; then
   fi
 fi
 python3 main.py "${CLONE_ARGS[@]}"
-popd
+popd || exit 1
 
-pushd "${DEV_BALLERINA_STD_LIB_REPOS}"
+pushd "${DEV_BALLERINA_STD_LIB_REPOS}" || exit 1
 for STDLIB_DIR in ./*/
 do
-  pushd "${STDLIB_DIR}" > /dev/null 2>&1
+  pushd "${STDLIB_DIR}" > /dev/null 2>&1 || exit 1
   if ! git ls-remote --exit-code origin > /dev/null 2>&1 && git ls-remote --exit-code upstream > /dev/null 2>&1; then
     git remote rename origin upstream || true
   fi
-  popd > /dev/null 2>&1
+  popd > /dev/null 2>&1 || exit 1
 done
-popd
+popd || exit 1
 
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

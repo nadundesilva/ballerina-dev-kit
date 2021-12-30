@@ -23,10 +23,10 @@ DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/nul
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
-pushd stdlib_builder
+pushd "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/stdlib_builder" || exit 1
 python3 main.py execute --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cache="${USE_NO_CACHE}" \
   --inherit-exit-code="${INHERIT_EXIT_CODE}" "${@}"
-popd
+popd || exit 1
 
 # shellcheck source=../cleanup.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

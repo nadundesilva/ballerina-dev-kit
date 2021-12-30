@@ -60,7 +60,7 @@ jobs:
         make ballerina-pack.build
     - name: Unzip Pack
       if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
-      run: bash scripts/ballerina-pack/unzipPack.sh
+      run: bash scripts/ballerina-pack/unzip-pack.sh
     - name: Test Hello World Project
       if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
       env:
