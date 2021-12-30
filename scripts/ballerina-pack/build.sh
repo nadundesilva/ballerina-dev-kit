@@ -22,8 +22,6 @@ DEV_BALLERINA_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/nul
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
-env | grep "JAVA"
-
 pushd "${DEV_BALLERINA_LANG_REPO}" || exit 1
 echo
 echo "Running Gradle Build (Ballerina Lang)"

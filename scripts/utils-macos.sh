@@ -16,10 +16,18 @@
 set -e
 
 function readAbsolutePath() {
-  echo "$(dirname $1)/$(basename $1)"
+  echo "$(dirname "${1}")/$(basename "${1}")"
+}
+
+function installWithBrew() {
+  if brew ls --versions "${1}" > /dev/null; then
+    echo "Package ${1} already installed"
+  else
+    brew install "${1}"
+  fi
 }
 
 function installDependencies() {
   brew update
-  brew install miniconda
+  installWithBrew miniconda
 }

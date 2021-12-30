@@ -24,6 +24,7 @@ source "${DEV_BALLERINA_SCRIPTS_DIR}/properties.sh"
 # shellcheck source=../utils.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/utils.sh"
 
+echo "Installing Dependencies"
 installDependencies
 
 if [[ ! "${CI}" == "true" ]]; then
@@ -41,3 +42,11 @@ if [[ ! "${CI}" == "true" ]]; then
 
   echo "Please restart shell for the changes to take effect"
 fi
+
+# shellcheck source=../init.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
+
+python3 -m pip install -r "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/stdlib_builder/requirements.txt"
+
+# shellcheck source=../cleanup.sh
+source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"

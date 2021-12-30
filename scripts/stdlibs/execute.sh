@@ -28,5 +28,5 @@ python3 main.py execute --stdlibs-dir="${DEV_BALLERINA_STD_LIB_REPOS}" --no-cach
   --inherit-exit-code="${INHERIT_EXIT_CODE}" "${@}"
 popd
 
-# shellcheck source=../init.sh
+# shellcheck source=../cleanup.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/cleanup.sh"
