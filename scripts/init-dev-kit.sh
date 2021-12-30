@@ -46,6 +46,7 @@ fi
 # shellcheck source=../init.sh
 source "${DEV_BALLERINA_SCRIPTS_DIR}/init.sh"
 
+echo "Installing Standard Libraries Builder dependencies"
 python3 -m pip install -r "${DEV_BALLERINA_SCRIPTS_DIR}/stdlibs/stdlib_builder/requirements.txt"
 
 # shellcheck source=../cleanup.sh

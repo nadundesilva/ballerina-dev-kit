@@ -23,11 +23,16 @@ function installWithBrew() {
   if brew ls --versions "${1}" > /dev/null; then
     echo "Package ${1} already installed"
   else
+    echo "Installing package ${1} as it is not already installed"
     brew install "${1}"
   fi
 }
 
 function installDependencies() {
   brew update
-  installWithBrew miniconda
+  if ! command -v conda &> /dev/null; then
+    installWithBrew miniconda
+  else
+    echo "Conda already available in $(which conda)"
+  fi
 }

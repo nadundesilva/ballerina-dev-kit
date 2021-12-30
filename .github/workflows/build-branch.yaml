@@ -21,6 +21,9 @@ jobs:
       with:
         distribution: adopt
         java-version: 11
+    - name: Initialize Dev Kit
+      run: |
+        make init-dev-kit ballerina-stdlibs.clone
     - name: Build Pack
       env:
         packageUser: ${{ github.actor }}
@@ -57,6 +60,9 @@ jobs:
       with:
         distribution: adopt
         java-version: 11
+    - name: Initialize Dev Kit
+      run: |
+        make init-dev-kit ballerina-stdlibs.clone
     - name: Build Pack
       env:
         packageUser: ${{ github.actor }}
