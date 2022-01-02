@@ -42,6 +42,9 @@ jobs:
         fi
     - name: Commit new Submodule Versions
       if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        GITHUB_USER: ${{ github.actor }}
       run: |
         echo "Configuring Git CLI"
         git config user.name "Nadun De Silva"
