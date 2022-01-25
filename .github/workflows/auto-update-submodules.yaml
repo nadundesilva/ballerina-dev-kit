@@ -71,30 +71,30 @@ jobs:
         packagePAT: ${{ secrets.GITHUB_TOKEN }}
       run: |
         make ballerina-project.hello_world_service.build
-    - name: Push new Submodule Versions
-      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
-        GITHUB_USER: ${{ github.actor }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
-      run: |
-        echo "Updating remote branch with the new submodule versions"
-        git push -u https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git automated/submodule-update -f
-    - name: Create Pull Request
-      if: ${{ steps.update-submodules.outputs.updates-available == 'true' && env.BOT_TOKEN_EXISTS == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
-      run: |
-        echo "Checking whether an already open PR exists"
-        OPEN_PR_COUNT=$(gh pr list --label "Type/SubmodulesUpdate" --base main \
-          --limit 1 --state "open" --json "state" --template "{{ len . }}")
-        echo
-        if [ "${OPEN_PR_COUNT}" == "0" ]; then
-          echo "Opening PR as no already open PR was found"
-          gh pr create --label "Type/SubmodulesUpdate" --base main \
-            --assignee "@me" --head automated/submodule-update \
-            --title "[Automated] Update Submodules to the latest version" \
-            --body "Update Submodules to the latest version"
-        else
-          echo "Already open PR Exists"
-        fi
+#    - name: Push new Submodule Versions
+#      if: ${{ steps.update-submodules.outputs.updates-available == 'true' }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+#        GITHUB_USER: ${{ github.actor }}
+#        GITHUB_REPOSITORY: ${{ github.repository }}
+#      run: |
+#        echo "Updating remote branch with the new submodule versions"
+#
+#    - name: Create Pull Request
+#      if: ${{ steps.update-submodules.outputs.updates-available == 'true' && env.BOT_TOKEN_EXISTS == 'true' }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+#      run: |
+#        echo "Checking whether an already open PR exists"
+#        OPEN_PR_COUNT=$(gh pr list --label "Type/SubmodulesUpdate" --base main \
+#          --limit 1 --state "open" --json "state" --template "{{ len . }}")
+#        echo
+#        if [ "${OPEN_PR_COUNT}" == "0" ]; then
+#          echo "Opening PR as no already open PR was found"
+#          gh pr create --label "Type/SubmodulesUpdate" --base main \
+#            --assignee "@me" --head automated/submodule-update \
+#            --title "[Automated] Update Submodules to the latest version" \
+#            --body "Update Submodules to the latest version"
+#        else
+#          echo "Already open PR Exists"
+#        fi
